@@ -1,6 +1,19 @@
+import { useRouter } from 'next/router';
+import { signOut, useSession } from 'next-auth/client';
+import Loader from './Loader';
+
 const UserMenuItem = (): JSX.Element => {
+  const router = useRouter();
+  const [session, loading] = useSession();
+
+  if (loading) return <Loader />;
+
   const signInOut = () => {
-    console.log(`sign in or out`);
+    if (session) {
+      signOut();
+    } else {
+      router.push(`/auth/sign-in`);
+    }
   };
 
   const UserCircleIcon = () => {

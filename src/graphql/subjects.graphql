@@ -1,8 +1,0 @@
-query allPhotosOfSubject($input: AllPhotosOfSubjectInput!) {
-  allPhotosOfSubject(input: $input) {
-    total
-    photos {
-      ...PhotoInfo
-    }
-  }
-}
