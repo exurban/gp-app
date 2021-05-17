@@ -10,7 +10,7 @@ import Loader from '../../../components/Loader';
 import ErrorMessage from '../../../components/ErrorMessage';
 import Gallery from '../../../components/Gallery';
 
-const TagGallery: React.FC = () => {
+const LocationGallery: React.FC = () => {
   const router = useRouter();
 
   // * get tag from router
@@ -80,4 +80,4 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   });
 };
 
-export default TagGallery;
+export default LocationGallery;

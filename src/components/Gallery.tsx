@@ -15,7 +15,7 @@ const Gallery: React.FC<Props> = ({ photos }) => {
     if (!photo || !photo.photoImage) {
       return false;
     } else {
-      return photo.photoImage.height > photo.photoImage?.width;
+      return photo.photoImage.height > photo.photoImage.width;
     }
   };
 
