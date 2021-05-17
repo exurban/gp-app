@@ -85,7 +85,7 @@ const Layout: React.FC = (props) => {
                       href="/"
                       aria-label="home"
                     >
-                      <a>
+                      <a aria-label="home">
                         <GPLogo />
                       </a>
                     </ActiveLink>
