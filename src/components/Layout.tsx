@@ -73,10 +73,10 @@ const Layout: React.FC = (props) => {
         <meta name="twitter:image" content={meta.image} key="twitterimage" />
       </Head>
       <div>
-        <header className="sticky top-0 z-10 bg-white dark:bg-coolGray-800">
-          <div className="mx-4 lg:mx-10 xl:mx-20">
-            <div className="flex justify-between items-center py-2  md:space-x-8">
-              <nav>
+        <header className="z-10 bg-white dark:bg-coolGray-800">
+          <nav className="mx-4 lg:mx-10 xl:mx-20" aria-label="Top">
+            <div>
+              <div className="flex justify-between items-center py-2  md:space-x-8">
                 <ul className="flex">
                   {!largeScreen && <SideNavMenu />}
                   <li className="my-auto p-2 text-coolGray-800 hover:text-indigo-600 dark:text-white dark:hover:text-indigo-500">
@@ -102,16 +102,16 @@ const Layout: React.FC = (props) => {
                     </>
                   )}
                 </ul>
-              </nav>
 
-              <div className="flex">
-                <UserMenuItem />
-                <FavoritesMenuItem />
-                <ShoppingBagMenuItem />
-                <ThemeMenuItem />
+                <div className="flex">
+                  <UserMenuItem />
+                  <FavoritesMenuItem />
+                  <ShoppingBagMenuItem />
+                  <ThemeMenuItem />
+                </div>
               </div>
             </div>
-          </div>
+          </nav>
         </header>
       </div>
 
