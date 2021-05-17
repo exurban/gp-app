@@ -1,11 +1,14 @@
-import { GetStaticProps, GetStaticPaths } from "next";
-import { useRouter } from "next/router";
-import { useQuery } from "@apollo/client";
-import { initializeApollo, addApolloState } from "../../../lib/apolloClient";
-import { AllPhotosAtLocationDocument, AllPhotosAtLocationInput } from "../../../graphql-operations";
-import Loader from "../../../components/Loader";
-import ErrorMessage from "../../../components/ErrorMessage";
-import Gallery from "../../../components/Gallery";
+import { GetStaticProps, GetStaticPaths } from 'next';
+import { useRouter } from 'next/router';
+import { useQuery } from '@apollo/client';
+import { initializeApollo, addApolloState } from '../../../lib/apolloClient';
+import {
+  AllPhotosAtLocationDocument,
+  AllPhotosAtLocationInput,
+} from '../../../graphql-operations';
+import Loader from '../../../components/Loader';
+import ErrorMessage from '../../../components/ErrorMessage';
+import Gallery from '../../../components/Gallery';
 
 const TagGallery: React.FC = () => {
   const router = useRouter();
@@ -20,10 +23,13 @@ const TagGallery: React.FC = () => {
   const input = { name: searchString } as AllPhotosAtLocationInput;
 
   const { loading, error, data } = useQuery(AllPhotosAtLocationDocument, {
-    variables: { input: input }
+    variables: { input: input },
   });
 
-  if (error) return <ErrorMessage message={`Error loading photos at location: ${name}.`} />;
+  if (error)
+    return (
+      <ErrorMessage message={`Error loading photos at location: ${name}.`} />
+    );
 
   if (loading) return <Loader />;
 
@@ -40,22 +46,22 @@ const TagGallery: React.FC = () => {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const locations = [
-    "Grand Teton National Park",
-    "Great Lakes",
-    "Great Smoky Mountains National Park",
-    "American Southwest",
-    "Unknown",
-    "Yellowstone National Park"
+    'Eastern U.S.',
+    'Great Lakes',
+    'Western U.S.',
+    'Southwestern U.S.',
+    'Southern U.S.',
+    'Unknown',
   ];
-  const paths = locations.map(l => ({ params: { name: l.toLowerCase() } }));
+  const paths = locations.map((l) => ({ params: { name: l.toLowerCase() } }));
   return {
     paths: paths,
-    fallback: false
+    fallback: false,
   };
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  if (!params || typeof params.name !== "string") {
+  if (!params || typeof params.name !== 'string') {
     return;
   }
   const input = { name: params.name } as AllPhotosAtLocationInput;
@@ -63,14 +69,14 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   await apolloClient.query({
     query: AllPhotosAtLocationDocument,
-    variables: { input: input }
+    variables: { input: input },
   });
 
   return addApolloState(apolloClient, {
     props: {
-      initialApolloState: apolloClient.cache.extract()
+      initialApolloState: apolloClient.cache.extract(),
     },
-    revalidate: 1
+    revalidate: 1,
   });
 };
 
