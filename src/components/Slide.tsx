@@ -22,7 +22,6 @@ const Slide: React.FC<{ photo: PhotoInfoFragment; priority: boolean }> = ({
     <>
       <div
         className="flex flex-row items-start"
-        onClick={() => showInfo()}
         onDoubleClick={() => showInfo()}
       >
         <div className="w-full relative overflow-hidden rounded-md shadow-lg">

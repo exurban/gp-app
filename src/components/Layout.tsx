@@ -25,7 +25,7 @@ const Layout: React.FC = (props) => {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-coolGray-800">
+    <div className="min-h-screen sticky top-0 bg-white dark:bg-coolGray-800">
       <Head>
         <title>{meta.title}</title>
         <meta name="robots" content="follow, index" />
@@ -72,45 +72,47 @@ const Layout: React.FC = (props) => {
         />
         <meta name="twitter:image" content={meta.image} key="twitterimage" />
       </Head>
-      <div className="sticky top-0 z-10 bg-white dark:bg-coolGray-800">
-        <div className="mx-4 lg:mx-10 xl:mx-20">
-          <div className="flex justify-between items-center py-2  md:space-x-8">
-            <nav>
-              <ul className="flex">
-                {!largeScreen && <SideNavMenu />}
-                <li className="my-auto p-2 text-coolGray-800 hover:text-indigo-600 dark:text-white dark:hover:text-indigo-500">
-                  <ActiveLink
-                    activeClassName="text-indigo-600 dark:text-indigo-500"
-                    href="/"
-                    aria-label="home"
-                  >
-                    <a>
-                      <GPLogo />
-                    </a>
-                  </ActiveLink>
-                </li>
-                {largeScreen && (
-                  <>
-                    <NavMenuItem name="Featured" link="/gallery/featured" />
-                    <NavMenuItem name="Land" link="/gallery/subject/land" />
-                    <NavMenuItem name="Water" link="/gallery/subject/water" />
-                    <NavMenuItem name="Sky" link="/gallery/subject/sky" />
-                    <NavMenuItem name="Bloom" link="/gallery/subject/bloom" />
-                    <NavMenuItem name="Bird" link="/gallery/subject/bird" />
-                    <NavMenuItem name="Beast" link="/gallery/subject/beast" />
-                  </>
-                )}
-              </ul>
-            </nav>
+      <div>
+        <header className="sticky top-0 z-10 bg-white dark:bg-coolGray-800">
+          <div className="mx-4 lg:mx-10 xl:mx-20">
+            <div className="flex justify-between items-center py-2  md:space-x-8">
+              <nav>
+                <ul className="flex">
+                  {!largeScreen && <SideNavMenu />}
+                  <li className="my-auto p-2 text-coolGray-800 hover:text-indigo-600 dark:text-white dark:hover:text-indigo-500">
+                    <ActiveLink
+                      activeClassName="text-indigo-600 dark:text-indigo-500"
+                      href="/"
+                      aria-label="home"
+                    >
+                      <a>
+                        <GPLogo />
+                      </a>
+                    </ActiveLink>
+                  </li>
+                  {largeScreen && (
+                    <>
+                      <NavMenuItem name="Featured" link="/gallery/featured" />
+                      <NavMenuItem name="Land" link="/gallery/subject/land" />
+                      <NavMenuItem name="Water" link="/gallery/subject/water" />
+                      <NavMenuItem name="Sky" link="/gallery/subject/sky" />
+                      <NavMenuItem name="Bloom" link="/gallery/subject/bloom" />
+                      <NavMenuItem name="Bird" link="/gallery/subject/bird" />
+                      <NavMenuItem name="Beast" link="/gallery/subject/beast" />
+                    </>
+                  )}
+                </ul>
+              </nav>
 
-            <div className="flex">
-              <UserMenuItem />
-              <FavoritesMenuItem />
-              <ShoppingBagMenuItem />
-              <ThemeMenuItem />
+              <div className="flex">
+                <UserMenuItem />
+                <FavoritesMenuItem />
+                <ShoppingBagMenuItem />
+                <ThemeMenuItem />
+              </div>
             </div>
           </div>
-        </div>
+        </header>
       </div>
 
       <main className="min-h-screen bg-white dark:bg-coolGray-800 pb-16 xl:pb-20">
