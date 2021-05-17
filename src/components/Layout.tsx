@@ -115,7 +115,7 @@ const Layout: React.FC = (props) => {
         </header>
       </div>
 
-      <main className=" bg-white dark:bg-coolGray-800 pb-16 xl:pb-20">
+      <main className="h-screen bg-white dark:bg-coolGray-800 pb-16 xl:pb-20">
         {children}
       </main>
 
