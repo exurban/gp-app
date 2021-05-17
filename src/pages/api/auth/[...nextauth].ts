@@ -135,33 +135,33 @@ const options: NextAuthOptions = {
     },
   },
 
-  events: {
-    async signIn(message) {
-      console.log(`sign in message: ${JSON.stringify(message, null, 2)}`);
-    },
-    async signOut(message) {
-      /* on signout */
-      console.log(`sign signOut message: ${JSON.stringify(message, null, 2)}`);
-    },
-    async createUser(message) {
-      /* user created */
-      console.log(`create user message: ${JSON.stringify(message, null, 2)}`);
-    },
-    async linkAccount(message) {
-      /* account linked to a user */
-      console.log(
-        `LINKED ACCOUNT message: ${JSON.stringify(message, null, 2)}`
-      );
-    },
-    async session(message) {
-      /* session is active */
-      console.log(`session message: ${JSON.stringify(message, null, 2)}`);
-    },
-    async error(message) {
-      /* error in authentication flow */
-      console.log(`ERROR!!! message: ${JSON.stringify(message, null, 2)}`);
-    },
-  },
+  // events: {
+  //   async signIn(message) {
+  //     console.log(`sign in message: ${JSON.stringify(message, null, 2)}`);
+  //   },
+  //   async signOut(message: any) {
+  //     /* on signout */
+  //     console.log(`sign signOut message: ${JSON.stringify(message, null, 2)}`);
+  //   },
+  //   async createUser(message) {
+  //     /* user created */
+  //     console.log(`create user message: ${JSON.stringify(message, null, 2)}`);
+  //   },
+  //   async linkAccount(message) {
+  //     /* account linked to a user */
+  //     console.log(
+  //       `LINKED ACCOUNT message: ${JSON.stringify(message, null, 2)}`
+  //     );
+  //   },
+  //   async session(message) {
+  //     /* session is active */
+  //     console.log(`session message: ${JSON.stringify(message, null, 2)}`);
+  //   },
+  //   async error(message) {
+  //     /* error in authentication flow */
+  //     console.log(`ERROR!!! message: ${JSON.stringify(message, null, 2)}`);
+  //   },
+  // },
 
   debug: true,
 };
