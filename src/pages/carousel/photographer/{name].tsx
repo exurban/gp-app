@@ -12,7 +12,7 @@ import Carousel from '../../../components/Carousel';
 import CarouselItem from '../../../components/CarouselItem';
 import CarouselMenu from '../../../components/CarouselMenu';
 
-const CollectionCarousel: React.FC = () => {
+const PhotographerCarousel: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [activePhoto, setActivePhoto] = useState<PhotoInfoFragment>();
 
@@ -46,7 +46,7 @@ const CollectionCarousel: React.FC = () => {
 
   if (!data) return null;
 
-  const { total, photos } = data.allPhotosInCollection;
+  const { total, photos } = data.allPhotosByPhotographer;
 
   const items = photos.map((photo, idx) => (
     <CarouselItem photo={photo} idx={idx} />
@@ -73,4 +73,4 @@ const CollectionCarousel: React.FC = () => {
   );
 };
 
-export default CollectionCarousel;
+export default PhotographerCarousel;

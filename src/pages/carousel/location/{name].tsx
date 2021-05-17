@@ -12,7 +12,7 @@ import Carousel from '../../../components/Carousel';
 import CarouselItem from '../../../components/CarouselItem';
 import CarouselMenu from '../../../components/CarouselMenu';
 
-const CollectionCarousel: React.FC = () => {
+const LocationCarousel: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [activePhoto, setActivePhoto] = useState<PhotoInfoFragment>();
 
@@ -73,4 +73,4 @@ const CollectionCarousel: React.FC = () => {
   );
 };
 
-export default CollectionCarousel;
+export default LocationCarousel;
