@@ -1,6 +1,8 @@
 import { NextApiRequest, NextApiResponse, NextApiHandler } from 'next';
 import NextAuth, { NextAuthOptions, User } from 'next-auth';
 import Providers from 'next-auth/providers';
+import nodemailer from 'nodemailer';
+import { html, text } from './verificationRequest';
 import { GraphQLClient } from 'graphql-request';
 import {
   GetApiTokenDocument,
@@ -52,6 +54,37 @@ const options: NextAuthOptions = {
     Providers.Email({
       server: process.env.EMAIL_SERVER,
       from: process.env.EMAIL_FROM,
+      sendVerificationRequest: ({ identifier: email, url, provider }) => {
+        return new Promise((resolve, reject) => {
+          const { server, from } = provider;
+          // Strip protocol from URL and use domain as site name
+          const site = `Gibbs Photography`;
+
+          nodemailer.createTransport(server).sendMail(
+            {
+              to: email,
+              from,
+              subject: `Sign in to ${site}`,
+              text: text({ url, site }),
+              html: html({ url, email }),
+            },
+            (error) => {
+              if (error) {
+                return reject(
+                  new Error(
+                    `SEND_VERIFICATION_EMAIL_ERROR ${JSON.stringify(
+                      error,
+                      null,
+                      2
+                    )}`
+                  )
+                );
+              }
+              return resolve();
+            }
+          );
+        });
+      },
     }),
   ],
   // * remote DB config
