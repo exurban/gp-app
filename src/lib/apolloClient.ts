@@ -16,8 +16,13 @@ let apolloClient: ApolloClient<NormalizedCacheObject> | null;
 
 const httpLink = createHttpLink({
   // Server URL (must be absolute url)
-  uri: 'https://api.gibbs-photography.com',
-  // uri: "http://localhost:4000/api"
+  // uri: 'https://api.gibbs-photography.com',
+  // uri: 'http://localhost:4000/api',
+
+  uri:
+    process.env.NODE_ENV === 'production'
+      ? `https://api.gibbs-photography.com`
+      : `http://localhost:4000`,
 });
 
 const authLink = setContext(async (_, { headers }) => {

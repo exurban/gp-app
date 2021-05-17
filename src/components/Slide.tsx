@@ -1,4 +1,4 @@
-// import { useRouter } from "next/router";
+import { useRouter } from 'next/router';
 import Image from 'next/image';
 import SlideMenu from './SlideMenu';
 import { PhotoInfoFragment } from '../graphql-operations';
@@ -7,22 +7,23 @@ const Slide: React.FC<{ photo: PhotoInfoFragment; priority: boolean }> = ({
   photo,
   priority,
 }) => {
-  // const router = useRouter();
+  const router = useRouter();
 
   if (!photo.photoImage) {
     return null;
   }
 
   const img = photo.photoImage;
-  const showInCarousel = () => {
-    console.log(`show in carousel`);
+  const showInfo = () => {
+    router.push(`/image/${photo.sku}`);
   };
 
   return (
     <>
       <div
         className="flex flex-row items-start"
-        onDoubleClick={() => showInCarousel()}
+        onClick={() => showInfo()}
+        onDoubleClick={() => showInfo()}
       >
         <div className="w-full relative overflow-hidden rounded-md shadow-lg">
           <Image
