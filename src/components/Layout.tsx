@@ -73,7 +73,7 @@ const Layout: React.FC = (props) => {
         <meta name="twitter:image" content={meta.image} key="twitterimage" />
       </Head>
       <div>
-        <header className="sticky top-0 w-screen z-10 h-20 bg-white dark:bg-coolGray-800">
+        <header className="fixed top-0 w-screen z-10 h-24 bg-white dark:bg-coolGray-800">
           <nav className="mx-4 lg:mx-10 xl:mx-20" aria-label="Top">
             <div>
               <div className="flex justify-between items-center py-2  md:space-x-8">
