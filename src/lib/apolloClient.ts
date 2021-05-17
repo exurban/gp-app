@@ -1,29 +1,34 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { useMemo } from "react";
-import { ApolloClient, createHttpLink, InMemoryCache, NormalizedCacheObject } from "@apollo/client";
-import merge from "deepmerge";
-import { setContext } from "@apollo/client/link/context";
-import isEqual from "lodash/isEqual";
+import { useMemo } from 'react';
+import {
+  ApolloClient,
+  createHttpLink,
+  InMemoryCache,
+  NormalizedCacheObject,
+} from '@apollo/client';
+import merge from 'deepmerge';
+import { setContext } from '@apollo/client/link/context';
+import isEqual from 'lodash/isEqual';
 
-export const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
+export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | null;
 
 const httpLink = createHttpLink({
   // Server URL (must be absolute url)
-  // uri: "https://api.gibbs-photography.com"
-  uri: "http://localhost:4000/api"
+  uri: 'https://api.gibbs-photography.com',
+  // uri: "http://localhost:4000/api"
 });
 
 const authLink = setContext(async (_, { headers }) => {
-  if (typeof window !== "undefined") {
+  if (typeof window !== 'undefined') {
     // const token = await getToken();
-    const token = "";
+    const token = '';
     return {
       headers: {
         ...headers,
-        Authorization: token ? `Bearer ${token}` : ""
-      }
+        Authorization: token ? `Bearer ${token}` : '',
+      },
     };
   }
   return undefined;
@@ -31,14 +36,16 @@ const authLink = setContext(async (_, { headers }) => {
 
 function createApolloClient() {
   return new ApolloClient({
-    ssrMode: typeof window === "undefined",
+    ssrMode: typeof window === 'undefined',
     link: authLink.concat(httpLink),
     // link: httpLink,
-    cache: new InMemoryCache()
+    cache: new InMemoryCache(),
   });
 }
 
-export function initializeApollo(initialState = null): ApolloClient<NormalizedCacheObject> {
+export function initializeApollo(
+  initialState = null
+): ApolloClient<NormalizedCacheObject> {
   const _apolloClient = apolloClient ?? createApolloClient();
 
   // If your page has Next.js data fetching methods that use Apollo Client, the initial state
@@ -58,15 +65,17 @@ export function initializeApollo(initialState = null): ApolloClient<NormalizedCa
       // combine arrays using object equality (like in sets)
       arrayMerge: (destinationArray, sourceArray) => [
         ...sourceArray,
-        ...destinationArray.filter(d => sourceArray.every(s => !isEqual(d, s)))
-      ]
+        ...destinationArray.filter((d) =>
+          sourceArray.every((s) => !isEqual(d, s))
+        ),
+      ],
     });
 
     // Restore the cache with the merged data
     _apolloClient.cache.restore(data);
   }
   // For SSG and SSR always create a new Apollo Client
-  if (typeof window === "undefined") return _apolloClient;
+  if (typeof window === 'undefined') return _apolloClient;
   // Create the Apollo Client once in the client
   if (!apolloClient) apolloClient = _apolloClient;
 

@@ -1,7 +1,7 @@
-import { PhotoInfoFragment } from "../graphql-operations";
-import Image from "next/image";
-import useWindowDimensions from "../utils/useWindowDimensions";
-import { isMobile } from "react-device-detect";
+import { PhotoInfoFragment } from '../graphql-operations';
+import Image from 'next/image';
+import useWindowDimensions from '../utils/useWindowDimensions';
+import { isMobile } from 'react-device-detect';
 
 type Props = {
   photo: PhotoInfoFragment;
@@ -9,11 +9,16 @@ type Props = {
 };
 
 const CarouselItem: React.FC<Props> = ({ photo, idx }) => {
-  if (typeof window === "undefined") {
+  if (typeof window === 'undefined') {
     return null;
   }
   const { height } = useWindowDimensions();
 
+  if (!photo.photoImage) {
+    return null;
+  }
+
+  // TODO: FIX THIS!
   return (
     <>
       <div
@@ -23,8 +28,8 @@ const CarouselItem: React.FC<Props> = ({ photo, idx }) => {
         style={{ height: isMobile ? `${height}px` : `${height - 110}px` }}
       >
         <Image
-          alt={photo.images?.[0].altText}
-          src={photo.images?.[0].imageUrl}
+          alt={photo.photoImage.altText}
+          src={photo.photoImage.webpUrl}
           layout="fill"
           objectFit="contain"
           quality={80}

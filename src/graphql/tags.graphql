@@ -1,0 +1,13 @@
+query allPhotosWithTag($input: AllPhotosWithTagInput!) {
+  allPhotosWithTag(input: $input) {
+    tagInfo {
+      id
+      name
+      description
+    }
+    total
+    photos {
+      ...PhotoInfo
+    }
+  }
+}

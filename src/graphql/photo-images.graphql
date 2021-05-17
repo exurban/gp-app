@@ -1,0 +1,15 @@
+fragment PhotoImageInfo on PhotoImage {
+  id
+  imageName
+  jpegUrl
+  webpUrl
+  altText
+  aspectRatio
+  size
+  width
+  height
+  isPortrait
+  isPanoramic
+  createdAt
+  updatedAt
+}

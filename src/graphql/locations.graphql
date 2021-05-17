@@ -1,0 +1,13 @@
+query allPhotosAtLocation($input: AllPhotosAtLocationInput!) {
+  allPhotosAtLocation(input: $input) {
+    locationInfo {
+      id
+      name
+      description
+    }
+    total
+    photos {
+      ...PhotoInfo
+    }
+  }
+}

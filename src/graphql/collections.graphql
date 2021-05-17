@@ -1,0 +1,14 @@
+query allPhotosInCollection($input: AllPhotosInCollectionInput!) {
+  allPhotosInCollection(input: $input) {
+    collectionInfo {
+      id
+      name
+      tag
+      description
+    }
+    total
+    photos {
+      ...PhotoInfo
+    }
+  }
+}

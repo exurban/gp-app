@@ -1,23 +1,23 @@
-import { useMemo, useState } from "react";
-import { GetStaticProps, GetStaticPaths } from "next";
-import { useQuery, useMutation } from "@apollo/client";
-import { addApolloState, initializeApollo } from "../../lib/apolloClient";
-import Head from "next/head";
-import { useRouter } from "next/router";
-import Image from "next/image";
+import { useMemo, useState } from 'react';
+import { GetStaticProps, GetStaticPaths } from 'next';
+import { useQuery, useMutation } from '@apollo/client';
+import { addApolloState, initializeApollo } from '../../lib/apolloClient';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import Image from 'next/image';
 import {
   PhotoInfoFragment,
   PhotoWithSkuDocument,
   FavoritesDocument,
   AddPhotoToFavoritesDocument,
-  ShoppingBagItemsDocument
-} from "../../graphql-operations";
-import Loader from "../../components/Loader";
-import ErrorMessage from "../../components/ErrorMessage";
-import Link from "next/link";
-import { useMediaQuery } from "react-responsive";
-import { photoSkus } from "../../../build-data";
-import { TagLinkPrimary, TagLinkSecondary } from "../../components/TagLink";
+  ShoppingBagItemsDocument,
+} from '../../graphql-operations';
+import Loader from '../../components/Loader';
+import ErrorMessage from '../../components/ErrorMessage';
+import Link from 'next/link';
+import { useMediaQuery } from 'react-responsive';
+import { photoSkus } from '../../../build-data';
+import { TagLinkPrimary, TagLinkSecondary } from '../../components/TagLink';
 
 import {
   TwitterShareButton,
@@ -25,28 +25,28 @@ import {
   FacebookShareButton,
   FacebookIcon,
   LinkedinShareButton,
-  LinkedinIcon
-} from "react-share";
+  LinkedinIcon,
+} from 'react-share';
 
 const PhotoInfo: React.FC = () => {
   const router = useRouter();
   const [isSignedIn] = useState(false);
   const [addToFavorites] = useMutation(AddPhotoToFavoritesDocument);
 
-  const mdScreen = useMediaQuery({ query: "(min-width: 768px)" });
-  const lgScreen = useMediaQuery({ query: "(min-width: 1024px)" });
+  const mdScreen = useMediaQuery({ query: '(min-width: 768px)' });
+  const lgScreen = useMediaQuery({ query: '(min-width: 1024px)' });
 
   const { sku } = router.query;
 
   let skuInt = 0;
-  if (sku && typeof sku === "string") {
+  if (sku && typeof sku === 'string') {
     skuInt = parseInt(sku);
   }
   const { loading, error, data } = useQuery(PhotoWithSkuDocument, {
-    variables: { sku: skuInt }
+    variables: { sku: skuInt },
   });
 
-  if (!data) {
+  if (!data || !data.photoWithSku) {
     return null;
   }
 
@@ -55,19 +55,24 @@ const PhotoInfo: React.FC = () => {
   if (error) return <ErrorMessage message="Error loading photo." />;
 
   const photo: PhotoInfoFragment = data.photoWithSku;
-  const image = photo.images[0];
+
+  if (!photo.photoImage) {
+    console.error(`ERROR: Got photo without an image!`);
+    return null;
+  }
+  const image = photo.photoImage;
   // const sharingImage = photo.sharingImage || image;
 
-  const pgName = photo?.photographer?.name as string;
-  const locationName = photo?.location?.name as string;
-  const subjects = photo?.subjectsInPhoto?.map(x => x.subject);
-  const tags = photo?.tagsForPhoto?.map(x => x.tag);
-  const collections = photo?.collectionsForPhoto?.map(x => x.collection);
+  const pgName = photo.photographer?.name as string;
+  const locationName = photo.location?.name as string;
+  const subjects = photo.subjectsInPhoto?.map((x) => x.subject);
+  const tags = photo.tagsForPhoto?.map((x) => x.tag);
+  const collections = photo.collectionsForPhoto?.map((x) => x.collection);
 
   //! route to Auth0 signin
   const signinFirst = () => {
-    localStorage.setItem("redirectUrl", router.pathname);
-    localStorage.setItem("favPhoto", photo.id);
+    localStorage.setItem('redirectUrl', router.pathname);
+    localStorage.setItem('favPhoto', photo.id);
     // router.push("/auth/signin");
   };
 
@@ -83,17 +88,17 @@ const PhotoInfo: React.FC = () => {
     addToFavorites({
       variables: { photoId: parseInt(photo.id) },
       optimisticResponse: {
-        __typename: "Mutation",
+        __typename: 'Mutation',
         addPhotoToFavorites: {
           success: true,
           message: `Added ${photo.title} to your favorites.`,
           addedPhotoWithId: photo.id,
-          __typename: "AddPhotoToFavoritesResponse"
-        }
+          __typename: 'AddPhotoToFavoritesResponse',
+        },
       },
       update: (cache, { data: { ...newPhotoResponse } }) => {
         const { ...existing } = cache.readQuery({
-          query: FavoritesDocument
+          query: FavoritesDocument,
         });
 
         const response = newPhotoResponse.addPhotoToFavorites;
@@ -106,12 +111,14 @@ const PhotoInfo: React.FC = () => {
           query: FavoritesDocument,
           data: {
             favorites: {
-              __typename: "FavoritesResponse",
-              photoList: photo ? [photo, ...existingPhotos] : [...existingPhotos]
-            }
-          }
+              __typename: 'FavoritesResponse',
+              photoList: photo
+                ? [photo, ...existingPhotos]
+                : [...existingPhotos],
+            },
+          },
         });
-      }
+      },
     });
     {
       success ? console.log(`success: ${msg}`) : console.log(`failure: ${msg}`);
@@ -120,13 +127,15 @@ const PhotoInfo: React.FC = () => {
 
   const { data: favs } = useQuery(FavoritesDocument);
   const inFavorites = useMemo(() => {
-    const favIds = favs?.favorites?.photoList?.map(f => f.id);
+    const favIds = favs?.favorites?.photoList?.map((f) => f.id);
     return favIds ? favIds.includes(photo.id) : false;
   }, [favs]);
 
   const { data: bagItems } = useQuery(ShoppingBagItemsDocument);
   const inShoppingBag = useMemo(() => {
-    const bagItemIds = bagItems?.shoppingBagItems?.dataList?.map(b => b.photo.id);
+    const bagItemIds = bagItems?.shoppingBagItems?.dataList?.map(
+      (b) => b.photo.id
+    );
     return bagItemIds ? bagItemIds.includes(photo.id) : false;
   }, [bagItems]);
 
@@ -135,7 +144,9 @@ const PhotoInfo: React.FC = () => {
   };
 
   const onShoppingBagClick = () => {
-    inShoppingBag ? router.push("/shop/review-order") : router.push(`/shop/options/${photo.sku}`);
+    inShoppingBag
+      ? router.push('/shop/review-order')
+      : router.push(`/shop/options/${photo.sku}`);
   };
 
   const shareIconSize = () => {
@@ -149,12 +160,12 @@ const PhotoInfo: React.FC = () => {
   };
 
   const pageTitle =
-    photo.title && photo.title != "Untitled"
+    photo.title && photo.title != 'Untitled'
       ? `Gibbs Photography | ${photo.title}`
       : `Gibbs Photography`;
 
   const description =
-    photo.description && photo.description != "No description provided."
+    photo.description && photo.description != 'No description provided.'
       ? `${photo.description}`
       : `Wildlife & Landscape Photography`;
 
@@ -164,24 +175,32 @@ const PhotoInfo: React.FC = () => {
   return (
     <>
       <Head>
-        <meta property="og:image" content={photo.sharingImage?.imageUrl} key="ogimage" />
+        <meta
+          property="og:image"
+          content={photo.shareImage?.imageUrl}
+          key="ogimage"
+        />
         <meta
           property="og:image:width"
-          content={photo.sharingImage?.width.toString()}
+          content={photo.shareImage?.width.toString()}
           key="ogimagewidth"
         />
         <meta
           property="og:image:height"
-          content={photo.sharingImage?.height.toString()}
+          content={photo.shareImage?.height.toString()}
           key="ogimageheight"
         />
-        <meta name="twitter:image" content={photo.sharingImage?.imageUrl} key="twitterimage" />
+        <meta
+          name="twitter:image"
+          content={photo.shareImage?.imageUrl}
+          key="twitterimage"
+        />
       </Head>
       <div className="container py-4 mx-auto text-coolGray-800 dark:text-white">
         <div className="flex flex-col w-5/6 w-max-w-3xl mx-auto">
           <Image
             className="w-full relative overflow-hidden rounded-md shadow-lg"
-            src={image.imageUrl}
+            src={image.webpUrl}
             alt={image.altText}
             layout="responsive"
             width={image.width}
@@ -195,7 +214,11 @@ const PhotoInfo: React.FC = () => {
             <p className="text-xs md:text-sm lg:text-base xl:text-lg uppercase mr-2 text-coolGray-400">
               Photographer:
             </p>
-            <Link href={`/gallery/photographer/${encodeURIComponent(pgName.toLowerCase())}`}>
+            <Link
+              href={`/gallery/photographer/${encodeURIComponent(
+                pgName.toLowerCase()
+              )}`}
+            >
               <a>
                 <h3 className="text-base md:text-lg lg:text-xl xl:text-2xl mt-3 lg:mt-4 xl:mt-5 hover:text-indigo-700">
                   {pgName}
@@ -207,7 +230,11 @@ const PhotoInfo: React.FC = () => {
             <p className="text-xs md:text-sm lg:text-base xl:text-lg uppercase mr-2 text-coolGray-400">
               Location:
             </p>
-            <Link href={`/gallery/location/${encodeURIComponent(locationName.toLowerCase())}`}>
+            <Link
+              href={`/gallery/location/${encodeURIComponent(
+                locationName.toLowerCase()
+              )}`}
+            >
               <a>
                 <h3 className="text-base md:text-lg lg:text-xl xl:text-2xl mt-2 lg:mt-3 xl:mt-4 hover:text-purple-600">
                   {locationName}
@@ -243,10 +270,12 @@ const PhotoInfo: React.FC = () => {
           {collections && collections.length > 0 ? (
             <>
               <p>Collections</p>
-              {collections?.map(collection => (
+              {collections?.map((collection) => (
                 <Link
                   key={collection.id}
-                  href={`/gallery/collection/${encodeURIComponent(collection.name.toLowerCase())}`}
+                  href={`/gallery/collection/${encodeURIComponent(
+                    collection.name.toLowerCase()
+                  )}`}
                 >
                   <a>{collection.name}</a>
                 </Link>
@@ -258,18 +287,22 @@ const PhotoInfo: React.FC = () => {
               <p className="text-xs md:text-sm lg:text-base xl:text-lg uppercase mr-2 text-coolGray-400 ">
                 Related:
               </p>
-              {subjects?.map(sub => (
+              {subjects?.map((sub) => (
                 <TagLinkPrimary
                   key={sub.name}
                   text={sub.name}
-                  url={`/gallery/subject/${encodeURIComponent(sub.name.toLowerCase())}`}
+                  url={`/gallery/subject/${encodeURIComponent(
+                    sub.name.toLowerCase()
+                  )}`}
                 />
               ))}
-              {tags?.map(tag => (
+              {tags?.map((tag) => (
                 <TagLinkSecondary
                   key={tag.name}
                   text={tag.name}
-                  url={`/gallery/tag/${encodeURIComponent(tag.name.toLowerCase())}`}
+                  url={`/gallery/tag/${encodeURIComponent(
+                    tag.name.toLowerCase()
+                  )}`}
                 />
               ))}
             </div>
@@ -282,7 +315,7 @@ const PhotoInfo: React.FC = () => {
                 className="mx-2 md:mx-3 lg:mx-4"
                 url={pageUrl}
                 title={pageTitle}
-                hashtags={["nature", "photography"]}
+                hashtags={['nature', 'photography']}
               >
                 <TwitterIcon className="rounded-full" size={shareIconSize()} />
               </TwitterShareButton>
@@ -290,7 +323,7 @@ const PhotoInfo: React.FC = () => {
                 className="mx-2 md:mx-3 lg:mx-4"
                 url={pageUrl}
                 title={pageTitle}
-                hashtag={"photography"}
+                hashtag={'photography'}
               >
                 <FacebookIcon className="rounded-full" size={shareIconSize()} />
               </FacebookShareButton>
@@ -312,29 +345,29 @@ const PhotoInfo: React.FC = () => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = photoSkus.map(sku => ({ params: { sku: sku } }));
+  const paths = photoSkus.map((sku) => ({ params: { sku: sku } }));
   return {
     paths: paths,
-    fallback: false
+    fallback: false,
   };
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  if (!params || typeof params.sku !== "string") {
+  if (!params || typeof params.sku !== 'string') {
     return;
   }
   const apolloClient = initializeApollo();
 
   await apolloClient.query({
     query: PhotoWithSkuDocument,
-    variables: { sku: parseInt(params.sku) }
+    variables: { sku: parseInt(params.sku) },
   });
 
   return addApolloState(apolloClient, {
     props: {
-      initialApolloState: apolloClient.cache.extract()
+      initialApolloState: apolloClient.cache.extract(),
     },
-    revalidate: 1
+    revalidate: 1,
   });
 };
 

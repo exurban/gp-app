@@ -1,0 +1,31 @@
+fragment FrameInfo on Frame {
+  id
+  sortIndex
+  displayName
+  description
+  material
+  color
+  printType
+  frameSku
+  aspectRatio
+  dimension1
+  dimension2
+  retailPrice
+  createdAt
+  updatedAt
+  productImage {
+    id
+    imageName
+    fileExtension
+    imageUrl
+    altText
+    aspectRatio
+    size
+    width
+    height
+    isPortrait
+    isPanoramic
+    createdAt
+    updatedAt
+  }
+}

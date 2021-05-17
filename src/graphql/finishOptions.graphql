@@ -1,0 +1,65 @@
+query printsOfTypeAndAspectRatio($input: PrintsInput!) {
+  printsOfTypeAndAspectRatio(input: $input) {
+    success
+    message
+    prints {
+      ...PrintInfo
+    }
+  }
+}
+
+query matsOfTypeAndSize($input: MatsInput!) {
+  matsOfTypeAndSize(input: $input) {
+    success
+    message
+    mats {
+      ...MatInfo
+      productImage {
+        ...ProductImageInfo
+      }
+    }
+  }
+}
+
+query photoAndFinishOptionsForSku($sku: Int!) {
+  photoAndFinishOptionsForSku(sku: $sku) {
+    photo {
+      ...PhotoInfo
+    }
+    prints {
+      ...PrintInfo
+    }
+    mats {
+      ...MatInfo
+      productImage {
+        ...ProductImageInfo
+      }
+    }
+    frames {
+      ...FrameInfo
+      productImage {
+        ...ProductImageInfo
+      }
+    }
+  }
+}
+
+query finishOptions($aspectRatio: String!) {
+  finishOptions(aspectRatio: $aspectRatio) {
+    prints {
+      ...PrintInfo
+    }
+    mats {
+      ...MatInfo
+      productImage {
+        ...ProductImageInfo
+      }
+    }
+    frames {
+      ...FrameInfo
+      productImage {
+        ...ProductImageInfo
+      }
+    }
+  }
+}
