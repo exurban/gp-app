@@ -25,7 +25,7 @@ const Layout: React.FC = (props) => {
   };
 
   return (
-    <>
+    <div className="bg-white dark:bg-coolGray-800">
       <Head>
         <title>{meta.title}</title>
         <meta name="robots" content="follow, index" />
@@ -120,7 +120,7 @@ const Layout: React.FC = (props) => {
       </main>
 
       <Footer />
-    </>
+    </div>
   );
 };
 
