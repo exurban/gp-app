@@ -124,8 +124,8 @@ const options: NextAuthOptions = {
     signingKey: process.env.JWT_SIGNING_KEY,
   },
   pages: {
-    signIn: '/auth/sign-in',
-    signOut: '/auth/sign-out',
+    signIn: '/auth/signin',
+    signOut: '/auth/signout',
     error: '/auth/error',
     verifyRequest: '/auth/verify-email',
   },

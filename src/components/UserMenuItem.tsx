@@ -1,18 +1,17 @@
 import { useRouter } from 'next/router';
 import { signOut, useSession } from 'next-auth/client';
-import Loader from './Loader';
 
 const UserMenuItem = (): JSX.Element => {
   const router = useRouter();
   const [session, loading] = useSession();
 
-  if (loading) return <Loader />;
+  if (loading) return <div></div>;
 
   const signInOut = () => {
     if (session) {
       signOut();
     } else {
-      router.push(`/auth/sign-in`);
+      router.push(`/auth/signin`);
     }
   };
 
