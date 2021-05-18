@@ -175,6 +175,7 @@ const PhotoInfo: React.FC = () => {
   return (
     <>
       <Head>
+        <meta property="og:url" content={pageUrl} key="ogurl" />
         <meta
           property="og:image"
           content={photo.shareImage?.imageUrl}
