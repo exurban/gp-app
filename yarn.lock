@@ -520,6 +520,11 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
+"@corex/deepmerge@^2.5.11":
+  version "2.6.20"
+  resolved "https://registry.yarnpkg.com/@corex/deepmerge/-/deepmerge-2.6.20.tgz#a72d1cb5a101fd11160815b96f499a588362ba5b"
+  integrity sha512-oZZxwDtV0bf8VPcSIhZPvdBFUkVIC8zRblUjrrVAsbGRiqUuZJfoXw2M6NDiIXWcUCfOqbkFND6Yf3b9ej9AjA==
+
 "@emotion/cache@^10.0.27":
   version "10.0.29"
   resolved "https://registry.yarnpkg.com/@emotion/cache/-/cache-10.0.29.tgz#87e7e64f412c060102d589fe7c6dc042e6f9d1e0"
@@ -1144,6 +1149,29 @@
   dependencies:
     any-observable "^0.3.0"
 
+"@sendgrid/client@^7.4.3":
+  version "7.4.3"
+  resolved "https://registry.yarnpkg.com/@sendgrid/client/-/client-7.4.3.tgz#bc71aae05de2cd9aa607f4eb1d886711d09f9595"
+  integrity sha512-tTaHx893w5iqG0sVtUnMyRchuwYF95k4UOkmov1MouMIeMUbNvbalITo7cG7YSXUTY9rT2t4eBY6HcEBCVeqfg==
+  dependencies:
+    "@sendgrid/helpers" "^7.4.3"
+    axios "^0.21.1"
+
+"@sendgrid/helpers@^7.4.3":
+  version "7.4.3"
+  resolved "https://registry.yarnpkg.com/@sendgrid/helpers/-/helpers-7.4.3.tgz#231a4405266cfa291054df8b668fe3a4dc9387aa"
+  integrity sha512-Wt+68g1sVEM5UspJh34O/cxtv6BBbtAIk7U9B3PB2ySOtPs9e6hI1QkgYVwpNmkt7k2p86muUNyma/Aig25agg==
+  dependencies:
+    deepmerge "^4.2.2"
+
+"@sendgrid/mail@^7.4.4":
+  version "7.4.4"
+  resolved "https://registry.yarnpkg.com/@sendgrid/mail/-/mail-7.4.4.tgz#cc31915342d0233592baa6e80b74beaf32e0bf2b"
+  integrity sha512-9+dyArajxbPY7eJJAd2eps7MVsXW9E4Y294gWeMYku0/Id/qAivexidjstvkkVlZdlrHbEsGDlnMEcw2eXOiFg==
+  dependencies:
+    "@sendgrid/client" "^7.4.3"
+    "@sendgrid/helpers" "^7.4.3"
+
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
@@ -1212,6 +1240,11 @@
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
   integrity sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==
+
+"@types/gtag.js@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@types/gtag.js/-/gtag.js-0.0.4.tgz#81427d703b5a889b4fd1c37eaae6f2a6db228e5a"
+  integrity sha512-rn4yaEfryXklAtsiai4xHNUgLjGD8AEPQBNSCTa5QrvccFYYBWJQRGwaHiv2U/wdIzcjOuyyBC23YgdQfq5u/Q==
 
 "@types/http-proxy-agent@^2.0.2":
   version "2.0.2"
@@ -1676,6 +1709,13 @@ available-typed-arrays@^1.0.2:
   integrity sha512-XWX3OX8Onv97LMk/ftVyBibpGwY5a8SmuxZPzeOxqmuEqUCOM9ZE+uIaD1VNJ5QnvU2UQusvmKbuM1FR8QWGfQ==
   dependencies:
     array-filter "^1.0.0"
+
+axios@^0.21.1:
+  version "0.21.1"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.1.tgz#22563481962f4d6bde9a76d516ef0e5d3c09b2b8"
+  integrity sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
+  dependencies:
+    follow-redirects "^1.10.0"
 
 babel-plugin-dynamic-import-node@^2.3.3:
   version "2.3.3"
@@ -2868,6 +2908,11 @@ escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.5:
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
   integrity sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
 
+escape-string-regexp@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-4.0.0.tgz#14ba83a5d373e3d311e5afca29cf5bfad965bf34"
+  integrity sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==
+
 eslint-plugin-react-hooks@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/eslint-plugin-react-hooks/-/eslint-plugin-react-hooks-4.2.0.tgz#8c229c268d468956334c943bb45fc860280f5556"
@@ -3174,6 +3219,11 @@ flatted@^3.1.0:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.1.1.tgz#c4b489e80096d9df1dfc97c79871aea7c617c469"
   integrity sha512-zAoAQiudy+r5SvnSw3KJy5os/oRJYHzrzja/tBDqrZtNhUw8bt6y8OBzMWcjWr+8liV8Eb6yOhw8WZ7VFZ5ZzA==
+
+follow-redirects@^1.10.0:
+  version "1.14.1"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.1.tgz#d9114ded0a1cfdd334e164e6662ad02bfd91ff43"
+  integrity sha512-HWqDgT7ZEkqRzBvc2s64vSZ/hfOceEol3ac/7tKwzuvEyWx3/4UegXh5oBOIotkGsObyk3xznnSRVADBgWSQVg==
 
 foreach@^2.0.5:
   version "2.0.5"
@@ -4552,6 +4602,13 @@ marked@^2.0.1:
   resolved "https://registry.yarnpkg.com/marked/-/marked-2.0.3.tgz#3551c4958c4da36897bda2a16812ef1399c8d6b0"
   integrity sha512-5otztIIcJfPc2qGTN8cVtOJEjNJZ0jwa46INMagrYfk0EvqtRuEHLsEe0LrFS0/q+ZRKT0+kXK7P2T1AN5lWRA==
 
+matcher@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/matcher/-/matcher-4.0.0.tgz#a42a05a09aaed92e2d241eb91fddac689461ea51"
+  integrity sha512-S6x5wmcDmsDRRU/c2dkccDwQPXoFczc5+HpQ2lON8pnvHlnvHAHj5WlLVvw6n6vNyHuVugYrFohYxbS+pvFpKQ==
+  dependencies:
+    escape-string-regexp "^4.0.0"
+
 matchmediaquery@^0.3.0:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/matchmediaquery/-/matchmediaquery-0.3.1.tgz#8247edc47e499ebb7c58f62a9ff9ccf5b815c6d7"
@@ -4799,6 +4856,15 @@ next-auth@^3.23.0:
     preact "^10.4.1"
     preact-render-to-string "^5.1.14"
     querystring "^0.2.0"
+
+next-sitemap@^1.6.57:
+  version "1.6.57"
+  resolved "https://registry.yarnpkg.com/next-sitemap/-/next-sitemap-1.6.57.tgz#4b733357174cb85c81dd25845325f9bfbcab927d"
+  integrity sha512-pv6NgKGI3k8bCl98FOJ6ISAHBuUwYAy3kV8xqse3rcLQW0/AnK+02yPT+VC5d4abrNP6HqhSf1fKuIYoTzrx7Q==
+  dependencies:
+    "@corex/deepmerge" "^2.5.11"
+    matcher "^4.0.0"
+    minimist "^1.2.5"
 
 next-themes@^0.0.14:
   version "0.0.14"

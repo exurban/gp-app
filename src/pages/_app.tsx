@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { AppProps } from 'next/app';
 import { Provider as AuthProvider } from 'next-auth/client';
 import { ApolloProvider } from '@apollo/client';
@@ -7,10 +8,21 @@ import { ThemeProvider } from 'next-themes';
 import Layout from '../components/Layout';
 import CarouselLayout from '../components/CarouselLayout';
 import { useRouter } from 'next/router';
+import * as gtag from '../utils/gtag';
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   const apolloClient = useApollo(pageProps);
   const router = useRouter();
+
+  useEffect(() => {
+    const handleRouteChange = (url: URL) => {
+      gtag.pageview(url);
+    };
+    router.events.on('routeChangeComplete', handleRouteChange);
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [router.events]);
 
   return (
     <>
