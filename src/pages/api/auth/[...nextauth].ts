@@ -165,7 +165,6 @@ const options: NextAuthOptions = {
       return token;
     },
     session: async (session, user: GPUser) => {
-      console.log(`session callback`);
       session.accessToken = user.accessToken;
 
       return Promise.resolve(session);
