@@ -132,13 +132,13 @@ const options: NextAuthOptions = {
   },
 
   callbacks: {
-    async signIn(user, account, profile) {
-      console.log(`signin callback`);
-      console.log(`user: ${JSON.stringify(user, null, 2)}`);
-      console.log(`account: ${JSON.stringify(account, null, 2)}`);
-      console.log(`profile: ${JSON.stringify(profile, null, 2)}`);
-      return true;
-    },
+    // async signIn(user, account, profile) {
+    //   console.log(`signin callback`);
+    //   console.log(`user: ${JSON.stringify(user, null, 2)}`);
+    //   console.log(`account: ${JSON.stringify(account, null, 2)}`);
+    //   console.log(`profile: ${JSON.stringify(profile, null, 2)}`);
+    //   return true;
+    // },
     // async redirect(url, baseUrl) {
     //   console.log(`redirect callback`);
     //   console.log(`url: ${JSON.stringify(url, null, 2)}`);
@@ -146,9 +146,9 @@ const options: NextAuthOptions = {
     //   return baseUrl;
     // },
     jwt: async (token, user: GPUser) => {
-      console.log(`jwt callback with secret ${process.env.JWT_SECRET}`);
-      console.log(`user: ${JSON.stringify(user, null, 2)}`);
-      console.log(`token: ${JSON.stringify(token, null, 2)}`);
+      // console.log(`jwt callback with secret ${process.env.JWT_SECRET}`);
+      // console.log(`user: ${JSON.stringify(user, null, 2)}`);
+      // console.log(`token: ${JSON.stringify(token, null, 2)}`);
       // if (account?.accessToken) {
       //   token.accessToken = account.accessToken;
       // }

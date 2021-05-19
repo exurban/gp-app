@@ -40,7 +40,7 @@ const SigninSuccess: React.FC = () => {
       console.log(`should be pushing to ${url}`);
       router.push(url);
     } else {
-      router.push('/subject/gallery/beast');
+      router.push('/gallery/subject/beast');
     }
   }
 
