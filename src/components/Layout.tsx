@@ -14,7 +14,7 @@ import { useSession } from 'next-auth/client';
 
 const Layout: React.FC = (props) => {
   const router = useRouter();
-  const session = useSession();
+  const [session] = useSession();
   const largeScreen = useMediaQuery({ query: '(min-width: 1024px)' });
 
   const { children, ...customMeta } = props;
@@ -107,8 +107,8 @@ const Layout: React.FC = (props) => {
 
                 <div className="flex">
                   <UserMenuItem />
-                  {session && <FavoritesMenuItem />}
-                  {session && <ShoppingBagMenuItem />}
+                  {session ? <FavoritesMenuItem /> : null}
+                  {session ? <ShoppingBagMenuItem /> : null}
                   <ThemeMenuItem />
                 </div>
               </div>
