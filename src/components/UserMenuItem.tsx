@@ -10,6 +10,7 @@ const UserMenuItem = (): JSX.Element => {
   const signInOut = () => {
     if (session) {
       signOut();
+      router.push(`/auth/signout`);
     } else {
       router.push(`/auth/signin`);
     }

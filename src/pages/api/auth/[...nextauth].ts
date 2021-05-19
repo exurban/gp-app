@@ -202,8 +202,8 @@ const options: NextAuthOptions = {
   debug: true,
 };
 
-const authHandler: NextApiHandler = (
-  req: NextApiRequest,
-  res: NextApiResponse
-) => NextAuth(req, res, options);
-export default authHandler;
+// const authHandler: NextApiHandler = (
+//   req: NextApiRequest,
+//   res: NextApiResponse
+// ) => NextAuth(req, res, options);
+// export default authHandler;
