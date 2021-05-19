@@ -7,7 +7,11 @@ const SignInErrorPage: React.FC = () => {
 
   if (error) {
     console.error(
-      `got an error: ${error}. Need to do something more with this.`
+      `got an error: ${JSON.stringify(
+        error,
+        null,
+        2
+      )}. Need to do something more with this.`
     );
   }
 

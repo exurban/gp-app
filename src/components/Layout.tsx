@@ -10,9 +10,11 @@ import SideNavMenu from './SideNavMenu';
 import Footer from './Footer';
 import { useMediaQuery } from 'react-responsive';
 import { GPLogo } from './Svg';
+import { useSession } from 'next-auth/client';
 
 const Layout: React.FC = (props) => {
   const router = useRouter();
+  const session = useSession();
   const largeScreen = useMediaQuery({ query: '(min-width: 1024px)' });
 
   const { children, ...customMeta } = props;
@@ -105,8 +107,8 @@ const Layout: React.FC = (props) => {
 
                 <div className="flex">
                   <UserMenuItem />
-                  <FavoritesMenuItem />
-                  <ShoppingBagMenuItem />
+                  {session && <FavoritesMenuItem />}
+                  {session && <ShoppingBagMenuItem />}
                   <ThemeMenuItem />
                 </div>
               </div>

@@ -11,6 +11,11 @@ const SignInPage: React.FC = () => {
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setEmail(event.target.value);
 
+  const signinWithEmail = () => {
+    console.log(`signing in with email.`);
+    signIn('email', { email: email });
+  };
+
   if (typeof window !== 'undefined' && session) {
     // * redirect to sign-success to complete sign in process
     router.push('/auth/signin-success');
@@ -33,7 +38,7 @@ const SignInPage: React.FC = () => {
             shopping bag.
           </p>
           <button
-            className="w-80 mx-auto my-3 py-3 rounded border-2 border-indigo-700 dark:border-purple-600 text-coolGray-700 dark:text-white bg-coolGray-50 dark:bg-purple-700 dark:hover:bg-purple-500"
+            className="w-80 mx-auto my-3 py-3 rounded border-2 border-purple-600 text-white bg-purple-700 hover:bg-purple-500"
             onClick={() => signIn('google')}
           >
             <div className="flex flex-row items-center justify-center">
@@ -42,7 +47,7 @@ const SignInPage: React.FC = () => {
             </div>
           </button>
           <button
-            className="w-80 mx-auto my-3 py-3 rounded border-2 border-indigo-700 dark:border-purple-600 text-coolGray-700 dark:text-white bg-coolGray-50 dark:bg-purple-700 dark:hover:bg-purple-500"
+            className="w-80 mx-auto my-3 py-3 rounded border-2 border-purple-600 text-white bg-purple-700 hover:bg-purple-500"
             onClick={() => signIn('apple')}
           >
             <div className="flex flex-row items-center justify-center">
@@ -50,12 +55,12 @@ const SignInPage: React.FC = () => {
               <p className="ml-2">Continue with Apple</p>
             </div>
           </button>
-          <form className="w-80 mx-auto py-2">
-            <p className="text-sm mt-3 text-coolGray-700 dark:text-white">
-              Email
-            </p>
+          <form className="w-80 mx-auto mt-5 py-2">
+            <label htmlFor="emailAddress" className="sr-only">
+              Email address
+            </label>
             <input
-              className="w-full mb-3 py-2 px-3 bg-coolGray-100 dark:bg-coolGray-700 rounded border-2 border-coolGray-700 dark:border-purple-700 dark:text-white"
+              className="w-full px-5 py-3 text-blueGray-900  border border-transparent placeholder-gray-500 focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white focus:border-white sm:max-w-xs rounded dark:bg-blueGray-100"
               name="email"
               type={email}
               value={email}
@@ -63,8 +68,8 @@ const SignInPage: React.FC = () => {
               onChange={onChange}
             />
             <button
-              className="w-80 mx-auto my-3 py-3 rounded border-2 border-indigo-700 dark:border-purple-600 text-coolGray-700 dark:text-white bg-coolGray-50 dark:bg-purple-700 dark:hover:bg-purple-500"
-              onClick={() => signIn('email', { email: email })}
+              className="w-80 mx-auto my-3 py-3 rounded border-2 border-purple-600 text-white bg-purple-700 hover:bg-purple-500"
+              onClick={() => signinWithEmail()}
             >
               <div className="flex flex-row items-center justify-center">
                 <EmailIcon />

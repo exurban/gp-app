@@ -59,6 +59,7 @@ const options: NextAuthOptions = {
           const { server, from } = provider;
           // Strip protocol from URL and use domain as site name
           const site = `Gibbs Photography`;
+          console.log(`sending email verification request`);
 
           nodemailer.createTransport(server).sendMail(
             {
@@ -127,7 +128,7 @@ const options: NextAuthOptions = {
     signIn: '/auth/signin',
     signOut: '/auth/signout',
     error: '/auth/error',
-    verifyRequest: '/auth/verify-email',
+    verifyRequest: '/auth/verify-request',
   },
 
   callbacks: {
@@ -138,12 +139,12 @@ const options: NextAuthOptions = {
       console.log(`profile: ${JSON.stringify(profile, null, 2)}`);
       return true;
     },
-    async redirect(url, baseUrl) {
-      console.log(`redirect callback`);
-      console.log(`url: ${JSON.stringify(url, null, 2)}`);
-      console.log(`base url: ${JSON.stringify(baseUrl, null, 2)}`);
-      return baseUrl;
-    },
+    // async redirect(url, baseUrl) {
+    //   console.log(`redirect callback`);
+    //   console.log(`url: ${JSON.stringify(url, null, 2)}`);
+    //   console.log(`base url: ${JSON.stringify(baseUrl, null, 2)}`);
+    //   return baseUrl;
+    // },
     jwt: async (token, user: GPUser) => {
       console.log(`jwt callback with secret ${process.env.JWT_SECRET}`);
       console.log(`user: ${JSON.stringify(user, null, 2)}`);

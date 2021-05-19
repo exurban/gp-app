@@ -70,3 +70,19 @@ input[type='email'] {
   appearance: none;
 }
 
+/* Change autocomplete styles in WebKit */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  border: 2px solid rgba(147, 51, 234 );
+  -webkit-text-fill-color: rgba(15, 23, 42);
+  -webkit-box-shadow: 0 0 0px 1000px rgba(241,245, 249) inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
