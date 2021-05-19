@@ -1,5 +1,5 @@
-import { NextApiRequest, NextApiResponse, NextApiHandler } from 'next';
-import NextAuth, { NextAuthOptions, User } from 'next-auth';
+// import { NextApiRequest, NextApiResponse, NextApiHandler } from 'next';
+import NextAuth, { User } from 'next-auth';
 import Providers from 'next-auth/providers';
 import nodemailer from 'nodemailer';
 import { html, text } from './verificationRequest';
@@ -35,7 +35,7 @@ interface GPUser extends User {
   accessToken?: string;
 }
 
-const options: NextAuthOptions = {
+export default NextAuth({
   providers: [
     Providers.Apple({
       clientId: process.env.APPLE_ID,
@@ -200,7 +200,7 @@ const options: NextAuthOptions = {
   // },
 
   debug: true,
-};
+});
 
 // const authHandler: NextApiHandler = (
 //   req: NextApiRequest,
