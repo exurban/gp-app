@@ -13,7 +13,7 @@ const getApiToken = async (args: GetApiTokenInput) => {
   console.log(`Requesting API token with ${JSON.stringify(args, null, 2)}`);
   const api =
     process.env.NODE_ENV === 'production'
-      ? `https://api.gibbs-photography.com`
+      ? `https://gibbs-photography.com`
       : `http://localhost:4000`;
   const graphQLClient = new GraphQLClient(api);
 
