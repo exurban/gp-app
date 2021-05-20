@@ -1,6 +1,7 @@
 // import { NextApiRequest, NextApiResponse, NextApiHandler } from 'next';
 import NextAuth, { User } from 'next-auth';
 import Providers from 'next-auth/providers';
+import Adapter from '@next-auth/typeorm-legacy-adapter';
 import nodemailer from 'nodemailer';
 import { html, text } from './verificationRequest';
 import { GraphQLClient } from 'graphql-request';
@@ -90,22 +91,40 @@ export default NextAuth({
       },
     }),
   ],
-  // * remote DB config
-  database: {
+  adapter: Adapter({
     type: 'postgres',
-    host: process.env.DB_HOST,
-    port: 5432,
-    username: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-    synchronize: false,
-    ssl: true,
-    extra: {
-      ssl: {
-        rejectUnauthorized: false,
+    database: {
+      type: 'postgres',
+      host: process.env.DB_HOST,
+      port: 5432,
+      username: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
+      synchronize: false,
+      ssl: true,
+      extra: {
+        ssl: {
+          rejectUnauthorized: false,
+        },
       },
     },
-  },
+  }),
+  // * remote DB config
+  // database: {
+  //   type: 'postgres',
+  //   host: process.env.DB_HOST,
+  //   port: 5432,
+  //   username: process.env.DB_USER,
+  //   password: process.env.DB_PASSWORD,
+  //   database: process.env.DB_DATABASE,
+  //   synchronize: false,
+  //   ssl: true,
+  //   extra: {
+  //     ssl: {
+  //       rejectUnauthorized: false,
+  //     },
+  //   },
+  // },
 
   // * Local DB Config
   // database: {
