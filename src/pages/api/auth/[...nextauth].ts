@@ -9,12 +9,14 @@ import {
   GetApiTokenInput,
 } from '../../../graphql-operations';
 
+/**
+ * getApiToken
+ * Use nest-auth login info to get an API token from the Apollo Server API.
+ */
 const getApiToken = async (args: GetApiTokenInput) => {
   console.log(`Requesting API token with ${JSON.stringify(args, null, 2)}`);
-  const api =
-    process.env.NODE_ENV === 'production'
-      ? `https://gibbs-photography.com`
-      : `http://localhost:4000`;
+  const api = `https://api.gibbs-photography.com`;
+
   const graphQLClient = new GraphQLClient(api);
 
   const input = {
