@@ -1,9 +1,6 @@
-// import { NextApiRequest, NextApiResponse, NextApiHandler } from 'next';
 import NextAuth, { User } from 'next-auth';
 import Providers from 'next-auth/providers';
-// import Adapter from '@next-auth/typeorm-legacy-adapter';
-import nodemailer from 'nodemailer';
-import { html, text } from './verificationRequest';
+
 import { GraphQLClient } from 'graphql-request';
 import {
   GetApiTokenDocument,
@@ -39,7 +36,12 @@ interface GPUser extends User {
 }
 
 export default NextAuth({
+  // https://next-auth.js.org/configuration/providers
   providers: [
+    Providers.Email({
+      server: process.env.EMAIL_SERVER,
+      from: process.env.EMAIL_FROM,
+    }),
     Providers.Apple({
       clientId: process.env.APPLE_ID,
       clientSecret: {
@@ -49,46 +51,9 @@ export default NextAuth({
         keyId: process.env.APPLE_KEY_ID as string,
       },
     }),
-
     Providers.Google({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET,
-    }),
-    Providers.Email({
-      server: process.env.EMAIL_SERVER,
-      from: process.env.EMAIL_FROM,
-      sendVerificationRequest: ({ identifier: email, url, provider }) => {
-        return new Promise((resolve, reject) => {
-          const { server, from } = provider;
-          // Strip protocol from URL and use domain as site name
-          const site = `Gibbs Photography`;
-          console.log(`sending email verification request`);
-
-          nodemailer.createTransport(server).sendMail(
-            {
-              to: email,
-              from,
-              subject: `Sign in to ${site}`,
-              text: text({ url, site }),
-              html: html({ url, email }),
-            },
-            (error) => {
-              if (error) {
-                return reject(
-                  new Error(
-                    `SEND_VERIFICATION_EMAIL_ERROR ${JSON.stringify(
-                      error,
-                      null,
-                      2
-                    )}`
-                  )
-                );
-              }
-              return resolve();
-            }
-          );
-        });
-      },
     }),
   ],
   // adapter: Adapter({
@@ -145,12 +110,12 @@ export default NextAuth({
     secret: process.env.NEXTAUTH_SECRET,
     signingKey: process.env.JWT_SIGNING_KEY,
   },
-  pages: {
-    signIn: '/auth/signin',
-    signOut: '/auth/signout',
-    error: '/auth/error',
-    verifyRequest: '/auth/verify-request',
-  },
+  // pages: {
+  //   signIn: '/auth/signin',
+  //   signOut: '/auth/signout',
+  //   error: '/auth/error',
+  //   verifyRequest: '/auth/verify-request',
+  // },
 
   callbacks: {
     // async signIn(user, account, profile) {
