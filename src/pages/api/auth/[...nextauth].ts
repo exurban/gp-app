@@ -1,20 +1,17 @@
-import NextAuth, { User } from 'next-auth';
+import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import NextAuth, { NextAuthOptions, User } from 'next-auth';
 import Providers from 'next-auth/providers';
-
+import nodemailer from 'nodemailer';
+import { html, text } from './verificationRequest';
 import { GraphQLClient } from 'graphql-request';
 import {
   GetApiTokenDocument,
   GetApiTokenInput,
 } from '../../../graphql-operations';
 
-/**
- * getApiToken
- * Use nest-auth login info to get an API token from the Apollo Server API.
- */
 const getApiToken = async (args: GetApiTokenInput) => {
   console.log(`Requesting API token with ${JSON.stringify(args, null, 2)}`);
-  const api = `https://api.gibbs-photography.com`;
-
+  const api = process.env.API_URI as string;
   const graphQLClient = new GraphQLClient(api);
 
   const input = {
@@ -23,7 +20,6 @@ const getApiToken = async (args: GetApiTokenInput) => {
     },
   };
   console.log(`Sending request with input: ${JSON.stringify(input, null, 2)}`);
-  console.log(`Requesting API Token from server at ${api}`);
 
   const token = await graphQLClient.request(GetApiTokenDocument, input);
 
@@ -35,15 +31,14 @@ interface GPUser extends User {
   accessToken?: string;
 }
 
-export default NextAuth({
-  // https://next-auth.js.org/configuration/providers
+const options: NextAuthOptions = {
   providers: [
-    Providers.Email({
-      server: process.env.EMAIL_SERVER,
-      from: process.env.EMAIL_FROM,
+    Providers.Google({
+      clientId: process.env.GOOGLE_ID as string,
+      clientSecret: process.env.GOOGLE_SECRET as string,
     }),
     Providers.Apple({
-      clientId: process.env.APPLE_ID,
+      clientId: process.env.APPLE_ID as string,
       clientSecret: {
         appleId: process.env.APPLE_ID as string,
         teamId: process.env.APPLE_TEAM_ID as string,
@@ -51,93 +46,88 @@ export default NextAuth({
         keyId: process.env.APPLE_KEY_ID as string,
       },
     }),
-    Providers.Google({
-      clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_SECRET,
+    Providers.Email({
+      server: process.env.EMAIL_SERVER,
+      from: process.env.EMAIL_FROM,
+      sendVerificationRequest: ({ identifier: email, url, provider }) => {
+        return new Promise((resolve, reject) => {
+          const { server, from } = provider;
+          // Strip protocol from URL and use domain as site name
+          const site = `Gibbs Photography`;
+
+          nodemailer.createTransport(server).sendMail(
+            {
+              to: email,
+              from,
+              subject: `Sign in to ${site}`,
+              text: text({ url, site }),
+              html: html({ url, email }),
+            },
+            (error) => {
+              if (error) {
+                return reject(
+                  new Error(
+                    `SEND_VERIFICATION_EMAIL_ERROR ${JSON.stringify(
+                      error,
+                      null,
+                      2
+                    )}`
+                  )
+                );
+              }
+              return resolve();
+            }
+          );
+        });
+      },
     }),
   ],
-  // adapter: Adapter({
-  //   type: 'postgres',
-  //   database: {
-  //     type: 'postgres',
-  //     host: process.env.DB_HOST,
-  //     port: 5432,
-  //     username: process.env.DB_USER,
-  //     password: process.env.DB_PASSWORD,
-  //     database: process.env.DB_DATABASE,
-  //     synchronize: false,
-  //     ssl: true,
-  //     extra: {
-  //       ssl: {
-  //         rejectUnauthorized: false,
-  //       },
-  //     },
-  //   },
-  // }),
   // * remote DB config
-  database: {
-    type: 'postgres',
-    host: process.env.DB_HOST,
-    port: 5432,
-    username: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-    synchronize: false,
-    ssl: true,
-    extra: {
-      ssl: {
-        rejectUnauthorized: false,
-      },
-    },
-  },
-
-  // * Local DB Config
   // database: {
   //   type: 'postgres',
-  //   host: 'localhost',
+  //   host: process.env.DB_HOST,
   //   port: 5432,
-  //   username: 'postgres',
-  //   password: 'postgres',
-  //   database: 'photos',
-  //   synchronize: true,
+  //   username: process.env.DB_USER,
+  //   password: process.env.DB_PASSWORD,
+  //   database: process.env.DB_DATABASE,
+  //   synchronize: false,
+  //   ssl: true,
+  //   extra: {
+  //     ssl: {
+  //       rejectUnauthorized: false,
+  //     },
+  //   },
   // },
+
+  // * Local DB Config
+  database: {
+    type: 'postgres',
+    host: 'localhost',
+    port: 5432,
+    username: 'postgres',
+    password: 'postgres',
+    database: 'photos',
+    synchronize: true,
+  },
 
   session: {
     jwt: true,
   },
   jwt: {
     encryption: false,
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: process.env.JWT_SECRET,
     signingKey: process.env.JWT_SIGNING_KEY,
   },
-  // pages: {
-  //   signIn: '/auth/signin',
-  //   signOut: '/auth/signout',
-  //   error: '/auth/error',
-  //   verifyRequest: '/auth/verify-request',
-  // },
 
+  pages: {
+    signIn: '/auth/signin',
+    signOut: '/auth/signout',
+    error: '/auth/error',
+    verifyRequest: '/auth/verify-request',
+  },
   callbacks: {
-    // async signIn(user, account, profile) {
-    //   console.log(`signin callback`);
-    //   console.log(`user: ${JSON.stringify(user, null, 2)}`);
-    //   console.log(`account: ${JSON.stringify(account, null, 2)}`);
-    //   console.log(`profile: ${JSON.stringify(profile, null, 2)}`);
-    //   return true;
-    // },
-    // async redirect(url, baseUrl) {
-    //   console.log(`redirect callback`);
-    //   console.log(`url: ${JSON.stringify(url, null, 2)}`);
-    //   console.log(`base url: ${JSON.stringify(baseUrl, null, 2)}`);
-    //   return baseUrl;
-    // },
+    // redirect: async (url, baseUrl) => { return Promise.resolve(baseUrl) },
     jwt: async (token, user: GPUser) => {
-      // console.log(`jwt callback with secret ${process.env.JWT_SECRET}`);
-      // console.log(`user: ${JSON.stringify(user, null, 2)}`);
-      // console.log(`token: ${JSON.stringify(token, null, 2)}`);
-      // if (account?.accessToken) {
-      //   token.accessToken = account.accessToken;
-      // }
       if (user && user !== undefined) {
         const signinArgs = {
           userId: user.id,
@@ -148,7 +138,7 @@ export default NextAuth({
 
         token = { ...token, accessToken: apiToken };
       }
-      return token;
+      return Promise.resolve(token);
     },
     session: async (session, user: GPUser) => {
       session.accessToken = user.accessToken;
@@ -156,40 +146,11 @@ export default NextAuth({
       return Promise.resolve(session);
     },
   },
-
-  // events: {
-  //   async signIn(message) {
-  //     console.log(`sign in message: ${JSON.stringify(message, null, 2)}`);
-  //   },
-  //   async signOut(message: any) {
-  //     /* on signout */
-  //     console.log(`sign signOut message: ${JSON.stringify(message, null, 2)}`);
-  //   },
-  //   async createUser(message) {
-  //     /* user created */
-  //     console.log(`create user message: ${JSON.stringify(message, null, 2)}`);
-  //   },
-  //   async linkAccount(message) {
-  //     /* account linked to a user */
-  //     console.log(
-  //       `LINKED ACCOUNT message: ${JSON.stringify(message, null, 2)}`
-  //     );
-  //   },
-  //   async session(message) {
-  //     /* session is active */
-  //     console.log(`session message: ${JSON.stringify(message, null, 2)}`);
-  //   },
-  //   async error(message) {
-  //     /* error in authentication flow */
-  //     console.log(`ERROR!!! message: ${JSON.stringify(message, null, 2)}`);
-  //   },
-  // },
-
   debug: true,
-});
+};
 
-// const authHandler: NextApiHandler = (
-//   req: NextApiRequest,
-//   res: NextApiResponse
-// ) => NextAuth(req, res, options);
-// export default authHandler;
+const authHandler: NextApiHandler = (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => NextAuth(req, res, options);
+export default authHandler;

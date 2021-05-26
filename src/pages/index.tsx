@@ -23,6 +23,11 @@ const Home: React.FC = () => {
           landscapes, their works convey both the ephemeral and enduring
           qualities of the American wilderness.
         </p>
+        <p className="mt-12 lg:mt-20 font-heading text-lg lg:text-xl xl:text-2xl text-coolGray-800 dark:text-white">
+          Share what you like! The photos displayed here are available for
+          convenient purchase via this webstore, with different print, format,
+          and frame options described.
+        </p>
         <div className="flex flex-col mx-auto mt-12 lg:mt-20">
           <Link href="/gallery/featured">
             <a className="flex flex-col items-center px-4 py-3 max-w-md border border-transparent text-base font-medium rounded-md text-purple-50 bg-indigo-600 shadow-lg hover:bg-purple-600 hover:text-white sm:px-8">

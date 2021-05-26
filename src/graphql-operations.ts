@@ -242,6 +242,24 @@ export type AddProductToShoppingBagResponse = {
   addedProduct?: Maybe<Product>;
 };
 
+export type AddShareImageInput = {
+  id?: Maybe<Scalars['Float']>;
+  imageName?: Maybe<Scalars['String']>;
+  fileExtension?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  altText?: Maybe<Scalars['String']>;
+  size?: Maybe<Scalars['String']>;
+  width?: Maybe<Scalars['Int']>;
+  height?: Maybe<Scalars['Int']>;
+};
+
+export type AddShareImageResponse = {
+  __typename?: 'AddShareImageResponse';
+  success: Scalars['Boolean'];
+  message: Scalars['String'];
+  newShareImage?: Maybe<ShareImage>;
+};
+
 /** Inputs to create a new Subject entity. */
 export type AddSubjectInput = {
   id?: Maybe<Scalars['Float']>;
@@ -517,7 +535,7 @@ export type Mutation = {
   updateMat: UpdateMatResponse;
   deleteMat: Scalars['Boolean'];
   updatePhotoImagesFromCsv: UpdatePhotoImagesFromCsvResponse;
-  addPhotoImage: AddPhotoImageResponse;
+  addPhotoImage: AddShareImageResponse;
   updatePhotoImage: UpdatePhotoImageResponse;
   deletePhotoImage: Scalars['Boolean'];
   updatePhotographersFromCsv: UpdatePhotographersFromCsvResponse;
@@ -541,6 +559,9 @@ export type Mutation = {
   addProduct: AddProductResponse;
   updateProduct: UpdateProductResponse;
   deleteProduct: SuccessMessageResponse;
+  updateShareImagesFromCsv: UpdateShareImagesFromCsvResponse;
+  updateShareImage: UpdateShareImageResponse;
+  deleteShareImage: Scalars['Boolean'];
   updateSubjectsFromCsv: UpdateSubjectsFromCsvResponse;
   addSubject: AddSubjectResponse;
   updateSubject: UpdateSubjectResponse;
@@ -609,7 +630,7 @@ export type MutationDeleteMatArgs = {
 };
 
 export type MutationAddPhotoImageArgs = {
-  input: AddPhotoImageInput;
+  input: AddShareImageInput;
 };
 
 export type MutationUpdatePhotoImageArgs = {
@@ -693,6 +714,15 @@ export type MutationUpdateProductArgs = {
 };
 
 export type MutationDeleteProductArgs = {
+  id: Scalars['Int'];
+};
+
+export type MutationUpdateShareImageArgs = {
+  input: UpdateShareImageInput;
+  id: Scalars['Int'];
+};
+
+export type MutationDeleteShareImageArgs = {
   id: Scalars['Int'];
 };
 
@@ -792,7 +822,7 @@ export type Photo = {
   photographer?: Maybe<Photographer>;
   location?: Maybe<Location>;
   /** Primary image for the photo with a maximum dimension of 1,400px, saved to .webp format and converted to .jpeg for email sharing. */
-  photoImage?: Maybe<PhotoImage>;
+  photoImage: PhotoImage;
   /** A 1,200px x 630px image for sharing. */
   shareImage?: Maybe<ShareImage>;
   subjectsInPhoto?: Maybe<Array<PhotoSubject>>;
@@ -997,7 +1027,7 @@ export type Query = {
   mat: Mat;
   photoImages: Array<PhotoImage>;
   photoImage: PhotoImage;
-  searchPhotoImages: SearchPhotoImagesResponse;
+  searchPhotoImages: SearchShareImagesResponse;
   printsOfTypeAndAspectRatio: PrintsResponse;
   matsOfTypeAndSize: MatsResponse;
   finishOptions: FinishOptions;
@@ -1024,6 +1054,8 @@ export type Query = {
   productImage: ProductImage;
   searchImages: SearchProductImagesResponse;
   product?: Maybe<Product>;
+  shareImages: Array<ShareImage>;
+  shareImage: ShareImage;
   /** Returns all Subjects. Sortable and filterable. */
   subjects: SubjectsResponse;
   /** Search subjects. */
@@ -1123,7 +1155,7 @@ export type QueryPhotoImageArgs = {
 };
 
 export type QuerySearchPhotoImagesArgs = {
-  input: SearchPhotoImagesInput;
+  input: SearchShareImagesInput;
 };
 
 export type QueryPrintsOfTypeAndAspectRatioArgs = {
@@ -1193,6 +1225,10 @@ export type QuerySearchImagesArgs = {
 };
 
 export type QueryProductArgs = {
+  id: Scalars['Int'];
+};
+
+export type QueryShareImageArgs = {
   id: Scalars['Int'];
 };
 
@@ -1326,6 +1362,15 @@ export type SearchProductImagesInput = {
 export type SearchProductImagesResponse = {
   __typename?: 'SearchProductImagesResponse';
   datalist: Array<ProductImage>;
+};
+
+export type SearchShareImagesInput = {
+  searchString: Scalars['String'];
+};
+
+export type SearchShareImagesResponse = {
+  __typename?: 'SearchShareImagesResponse';
+  datalist: Array<ShareImage>;
 };
 
 export type SearchSubjectsInput = {
@@ -1729,6 +1774,33 @@ export type UpdateProductResponse = {
   updatedProduct?: Maybe<Product>;
 };
 
+export type UpdateShareImageInput = {
+  id?: Maybe<Scalars['Float']>;
+  imageName?: Maybe<Scalars['String']>;
+  fileExtension?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  altText?: Maybe<Scalars['String']>;
+  size?: Maybe<Scalars['String']>;
+  width?: Maybe<Scalars['Int']>;
+  height?: Maybe<Scalars['Int']>;
+};
+
+export type UpdateShareImageResponse = {
+  __typename?: 'UpdateShareImageResponse';
+  success: Scalars['Boolean'];
+  message: Scalars['String'];
+  updatedShareImage?: Maybe<ShareImage>;
+};
+
+export type UpdateShareImagesFromCsvResponse = {
+  __typename?: 'UpdateShareImagesFromCsvResponse';
+  success: Scalars['Boolean'];
+  message: Scalars['String'];
+  updated?: Maybe<Scalars['Int']>;
+  inserted?: Maybe<Scalars['Int']>;
+  deleted?: Maybe<Scalars['Int']>;
+};
+
 /** Optional inputs to be used to update the Subject Info. */
 export type UpdateSubjectInput = {
   /** An index used to sort the subjects. */
@@ -2088,21 +2160,19 @@ export type PhotoInfoFragment = { __typename?: 'Photo' } & Pick<
   | 'priceModifier30'
   | 'retailPrice30'
 > & {
-    photoImage?: Maybe<
-      { __typename?: 'PhotoImage' } & Pick<
-        PhotoImage,
-        | 'id'
-        | 'imageName'
-        | 'jpegUrl'
-        | 'webpUrl'
-        | 'altText'
-        | 'aspectRatio'
-        | 'size'
-        | 'width'
-        | 'height'
-        | 'isPortrait'
-        | 'isPanoramic'
-      >
+    photoImage: { __typename?: 'PhotoImage' } & Pick<
+      PhotoImage,
+      | 'id'
+      | 'imageName'
+      | 'jpegUrl'
+      | 'webpUrl'
+      | 'altText'
+      | 'aspectRatio'
+      | 'size'
+      | 'width'
+      | 'height'
+      | 'isPortrait'
+      | 'isPanoramic'
     >;
     shareImage?: Maybe<
       { __typename?: 'ShareImage' } & Pick<

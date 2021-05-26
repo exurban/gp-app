@@ -26,8 +26,8 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
 
   return (
     <>
-      <AuthProvider session={pageProps.session}>
-        <ApolloProvider client={apolloClient}>
+      <ApolloProvider client={apolloClient}>
+        <AuthProvider session={pageProps.session}>
           <ThemeProvider attribute="class">
             {router.pathname.startsWith(`/carousel/`) ? (
               <CarouselLayout>
@@ -39,8 +39,8 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
               </Layout>
             )}
           </ThemeProvider>
-        </ApolloProvider>
-      </AuthProvider>
+        </AuthProvider>
+      </ApolloProvider>
     </>
   );
 };

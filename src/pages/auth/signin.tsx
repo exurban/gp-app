@@ -11,11 +11,6 @@ const SignInPage: React.FC = () => {
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setEmail(event.target.value);
 
-  const signinWithEmail = () => {
-    console.log(`signing in with email.`);
-    signIn('email', { email: email });
-  };
-
   if (typeof window !== 'undefined' && session) {
     // * redirect to sign-success to complete sign in process
     router.push('/auth/signin-success');
@@ -69,7 +64,7 @@ const SignInPage: React.FC = () => {
             />
             <button
               className="w-80 mx-auto my-3 py-3 rounded border-2 border-purple-600 text-white bg-purple-700 hover:bg-purple-500"
-              onClick={() => signinWithEmail()}
+              onClick={() => signIn('email', { email: email })}
             >
               <div className="flex flex-row items-center justify-center">
                 <EmailIcon />
