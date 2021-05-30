@@ -10,7 +10,7 @@ type Props = {
   print: PrintInfoFragment;
   size: number;
   imagePrice: imagePrice | undefined;
-  selectedPrint: PrintInfoFragment | undefined;
+  isSelected: boolean;
   setSelectedPrint: Dispatch<SetStateAction<PrintInfoFragment | undefined>>;
 };
 
@@ -18,7 +18,7 @@ const PrintSizeCard: React.FC<Props> = ({
   print,
   // size,
   imagePrice,
-  // selectedPrint,
+  isSelected,
   setSelectedPrint,
 }) => {
   let price = 0;
@@ -28,10 +28,14 @@ const PrintSizeCard: React.FC<Props> = ({
 
   return (
     <div
-      className="shadow-md rounded-sm border-2 border-solid border-transperent hover:border-indigo-700 transition-colors ease-in select-none w-2/3 my-1 mx-auto"
+      className={`my-3 p-4 shadow-sm rounded-md border-2 border-solid dark:hover:border-purple-500 transition-colors ease-in select-none w-64 max-w-xl mx-auto ${
+        isSelected
+          ? 'border-purple-500 dark:bg-purple-800'
+          : 'border-blueGray-700 dark:border-blueGray-500'
+      }`}
       onClick={() => setSelectedPrint(print)}
     >
-      <div className="content-between">
+      <div className="flex flex-row justify-between">
         <p>
           {print.dimension1}" x {print.dimension2}"
         </p>

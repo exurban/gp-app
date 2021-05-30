@@ -17,20 +17,21 @@ const Home: React.FC = () => {
         <h1 className="font-heading text-3xl lg:text-4xl text-coolGray-800 dark:text-white">
           Welcome
         </h1>
-        <p className="mt-12 lg:mt-20 font-heading text-lg lg:text-xl xl:text-2xl text-coolGray-800 dark:text-white">
+        <p className="mt-10 lg:mt-16 font-heading text-lg lg:text-xl xl:text-2xl text-coolGray-800 dark:text-white">
           Nature scenes are the creative inspiration for photographers Boyd and
           Scott Gibbs, a father-son team. From single subjects to vast
           landscapes, their works convey both the ephemeral and enduring
           qualities of the American wilderness.
         </p>
-        <p className="mt-12 lg:mt-20 font-heading text-lg lg:text-xl xl:text-2xl text-coolGray-800 dark:text-white">
-          Share what you like! The photos displayed here are available for
-          convenient purchase via this webstore, with different print, format,
-          and frame options described.
+        <p className="mt-10 lg:mt-16 font-heading text-lg lg:text-xl xl:text-2xl text-coolGray-800 dark:text-white">
+          The images on this site are available for purchase in a variety of
+          sizes and finishes. They may be ordered as prints for your custom
+          presentation. Or, by selecting from a range of matting and framing
+          options in your order, the images will arrive ready-to-hang.
         </p>
         <div className="flex flex-col mx-auto mt-12 lg:mt-20">
           <Link href="/gallery/featured">
-            <a className="flex flex-col items-center px-4 py-3 max-w-md border border-transparent text-base font-medium rounded-md text-purple-50 bg-indigo-600 shadow-lg hover:bg-purple-600 hover:text-white sm:px-8">
+            <a className="flex flex-col items-center px-4 py-3 text-lg lg:text-xl border border-transparent font-medium rounded-md text-purple-50 bg-indigo-600 shadow-lg hover:bg-purple-600 hover:text-white sm:px-8">
               Enter the Gallery
             </a>
           </Link>

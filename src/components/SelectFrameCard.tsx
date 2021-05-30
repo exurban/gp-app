@@ -3,28 +3,40 @@ import { FrameInfoFragment } from '../graphql-operations';
 
 type Props = {
   frame: FrameInfoFragment;
-  selectedFrame: FrameInfoFragment | undefined;
+  isSelected: boolean;
   setSelectedFrame: Dispatch<SetStateAction<FrameInfoFragment | undefined>>;
 };
 
 const SelectFrameCard: React.FC<Props> = ({
   frame,
-  // selectedFrame,
+  isSelected,
   setSelectedFrame,
 }) => {
   return (
     <div
-      className="shadow-md rounded-sm border-2 border-solid border-transperent hover:border-indigo-700 transition-colors ease-in select-none"
+      className={`m-3 shadow-sm rounded-md border-2 border-solid dark:hover:border-purple-500 transition-colors ease-in select-none  ${
+        isSelected
+          ? 'border-purple-500'
+          : 'border-blueGray-700 dark:border-blueGray-500'
+      }`}
       onClick={() => setSelectedFrame(frame)}
     >
       <img
-        className="rounded"
+        className="m-3 rounded"
         src={frame.productImage?.imageUrl}
         alt={frame.productImage?.altText}
         width="150px"
         height="135px"
       />
-      <p className="text-sm text-center mt-1">{frame.displayName}</p>
+      <div
+        className={`py-2 transition-colors ease-in select-none ${
+          isSelected
+            ? 'border-purple-500 dark:bg-purple-800'
+            : 'border-blueGray-700 dark:border-blueGray-500'
+        }`}
+      >
+        <p className="mt-1 text-center text-xs">{frame.displayName}</p>
+      </div>
     </div>
   );
 };

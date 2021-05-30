@@ -14,8 +14,8 @@ import {
 } from '../../../graphql-operations';
 import Loader from '../../../components/Loader';
 import ErrorMessage from '../../../components/ErrorMessage';
-
-import PrintTypeCard from '../../../components/PrintTypeCard';
+import Link from 'next/link';
+import SelectPrintType from '../../../components/SelectPrintType';
 import SelectPrintSize from '../../../components/SelectPrintSize';
 import SelectMat from '../../../components/SelectMat';
 import SelectFrame from '../../../components/SelectFrame';
@@ -86,7 +86,7 @@ const ConfigureForPurchasePage: React.FC = () => {
   }, [selectedPrintType, setSelectedPrintType]);
 
   useEffect(() => {
-    if (selectedPrint) {
+    if (selectedPrintType && selectedPrint) {
       const matSelections = mats?.filter(
         (mt) =>
           mt.dimension1 === selectedPrint.dimension1 &&
@@ -155,20 +155,28 @@ const ConfigureForPurchasePage: React.FC = () => {
   );
   const lowestPricePaper = Math.min(...paperPrices);
 
-  // const lowestPricePaper = paperPrints?.reduce(
-  //   (min, p) => (p.retailPrice < min ? p.retailPrice : min),
-  //   paperPrints[0].retailPrice
-  // );
   const aluPrints = prints.filter((p) => p.type === 'alu');
   const aluPrices = imagePrices.map(
     (ip, idx) => ip.price + aluPrints[idx].retailPrice
   );
   const lowestPriceAlu = Math.min(...aluPrices);
 
-  // const lowestPriceAlu = aluPrints?.reduce(
-  //   (min, p) => (p.retailPrice < min ? p.retailPrice : min),
-  //   aluPrints[0].retailPrice
-  // );
+  const printTypes = [
+    {
+      type: 'paper',
+      displayName: 'Exhibition Paper',
+      lowestPrice: lowestPricePaper,
+      description:
+        'The high-resolution image is printed in ink on fine-art quality paper. This paper print may be ordered separately, or finished with your choice of a single mat and wood or metal frame.',
+    },
+    {
+      type: 'alu',
+      displayName: 'Aluminum',
+      lowestPrice: lowestPriceAlu,
+      description:
+        'The high-resolution image is rendered by infusing dyes into the surface of a specially-coated aluminum sheet. This aluminum print may be ordered separately, or mounted in your choice of a float frame.',
+    },
+  ];
 
   const createProduct = () => {
     let matId, frameId;
@@ -197,42 +205,67 @@ const ConfigureForPurchasePage: React.FC = () => {
 
   return (
     <>
-      <div className="container m-4">
-        <div className="flex flex-col max-w-3xl mx-auto">
-          {image && (
-            <Image
-              src={image?.webpUrl as string}
-              layout="intrinsic"
-              width={image.width / 2}
-              height={image.height / 2}
-            />
-          )}
-          <h2 className="text-center mt-4">{photo.title}</h2>
-          <h5 className="mt-2">{pgName}</h5>
-          <p className="mt-2 text-indigo-600">{locationName}</p>
-          <p className="mt-2 text-lg">{photo.description}</p>
-          <hr className="mt-3" />
-
-          <h5 className="mt-3">Choose your material.</h5>
-
-          <div className="flex flex-col w-full mx-auto mt-3 justify-around">
-            <PrintTypeCard
-              type="paper"
-              displayName="Exhibition Paper"
-              lowestPrice={lowestPricePaper}
-              description="The high-resolution image is printed in ink on fine-art quality paper. This paper print may be ordered separately, or finished with your choice of a single mat and wood or metal frame."
-              selectedPrintType={selectedPrintType}
-              setSelectedPrintType={setSelectedPrintType}
-            />
-            <PrintTypeCard
-              type="alu"
-              displayName="Aluminum"
-              lowestPrice={lowestPriceAlu}
-              description="The high-resolution image is rendered by infusing dyes into the surface of a specially-coated aluminum sheet. This aluminum print may be ordered separately, or mounted in your choice of a float frame."
-              selectedPrintType={selectedPrintType}
-              setSelectedPrintType={setSelectedPrintType}
-            />
+      <div className="container py-4 mx-auto text-coolGray-800 dark:text-white">
+        <div className="flex flex-col w-5/6 w-max-w-3xl mx-auto">
+          <Image
+            className="w-full relative overflow-hidden rounded-md shadow-lg"
+            src={image.webpUrl}
+            alt={image.altText}
+            layout="responsive"
+            width={image.width}
+            height={image.height}
+            sizes="(max-width: 400px) 100vw, 720px"
+          />
+          <h2 className="subpixel-antialiased text-2xl md:3xl xl:text-4xl md: font-medium xl:font-semibold text-center mt-4 text-coolGray-800 dark:text-white">
+            {photo.title}
+          </h2>
+          <div className="flex flex-row items-baseline leading-8">
+            <p className="text-xs md:text-sm lg:text-base xl:text-lg uppercase mr-2 text-coolGray-400">
+              Photographer:
+            </p>
+            <Link
+              href={`/gallery/photographer/${encodeURIComponent(
+                pgName.toLowerCase()
+              )}`}
+            >
+              <a>
+                <h3 className="text-base md:text-lg lg:text-xl xl:text-2xl mt-3 lg:mt-4 xl:mt-5 hover:text-indigo-700">
+                  {pgName}
+                </h3>
+              </a>
+            </Link>
           </div>
+          <div className="flex flex-row items-baseline leading-8">
+            <p className="text-xs md:text-sm lg:text-base xl:text-lg uppercase mr-2 text-coolGray-400">
+              Location:
+            </p>
+            <Link
+              href={`/gallery/location/${encodeURIComponent(
+                locationName.toLowerCase()
+              )}`}
+            >
+              <a>
+                <h3 className="text-base md:text-lg lg:text-xl xl:text-2xl mt-2 lg:mt-3 xl:mt-4 text-indigo-700 hover:text-purple-600">
+                  {locationName}
+                </h3>
+              </a>
+            </Link>
+          </div>
+          <div className="flex flex-row items-baseline leading-8">
+            <p className="text-xs md:text-sm lg:text-base xl:text-lg uppercase mr-2 text-coolGray-400">
+              Description:
+            </p>
+            <p className="text-base md:text-lg lg:text-xl xl:text-2xl mt-2 lg:mt-3 xl:mt-4">
+              {photo.description}
+            </p>
+          </div>
+
+          <SelectPrintType
+            printTypes={printTypes}
+            selectedPrintType={selectedPrintType}
+            setSelectedPrintType={setSelectedPrintType}
+          />
+
           {aspectRatio && selectedPrintType && (
             <>
               <SelectPrintSize
@@ -259,7 +292,7 @@ const ConfigureForPurchasePage: React.FC = () => {
           )}
 
           <button
-            className="bg-indigo-700 text-white w-32 my-10 ml-auto mr-0"
+            className="bg-indigo-700 text-white rounded py-2 px-5 my-10 ml-auto mr-0"
             onClick={() => createProduct()}
           >
             Add to Bag

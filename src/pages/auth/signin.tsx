@@ -50,7 +50,7 @@ const SignInPage: React.FC = () => {
               <p className="ml-2">Continue with Apple</p>
             </div>
           </button>
-          <form className="w-80 mx-auto mt-5 py-2">
+          <div className="w-80 mx-auto mt-5 py-2">
             <label htmlFor="emailAddress" className="sr-only">
               Email address
             </label>
@@ -71,7 +71,7 @@ const SignInPage: React.FC = () => {
                 <p className="ml-2">Continue with Email</p>
               </div>
             </button>
-          </form>
+          </div>
           <p className="text-sm font-thin mt-20 text-coolGray-700 dark:text-white">
             By clicking "Continue with Google / Apple / email" above, you
             acknowledge that you have read and understood and agree to Gibbs

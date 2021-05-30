@@ -19,34 +19,33 @@ const SelectFrame: React.FC<Props> = ({
 
   return (
     <>
-      <hr className="my-3" />
+      <hr className="my-5 dark:border-blueGray-600" />
       {frames.length < 1 ? (
         <h5 className="my-2">
           No matting or framing options available for prints this size.
         </h5>
       ) : (
         <>
-          <div className="flex flex-row">
-            <h5 className="my-2">Add a frame.</h5>
-            <p className="self-center ml-2 text-blue-500 font-medium">
-              +${frames[0]?.retailPrice}
-            </p>
+          <div className="flex flex-row mt-3 align-baseline">
+            <h5 className="text-2xl text-purple-500">Add a frame.</h5>
+
             {frames[0].printType === 'paper' ? (
-              <p className="self-center ml-1 font-light text-gray-500 italic">
-                (optional, price includes acrylic sheet to protect image)
+              <p className="text-purple-700 font-medium self-center ml-2">
+                (+${frames[0]?.retailPrice}, optional, price includes acrylic
+                sheet to protect image)
               </p>
             ) : (
-              <p className="self-center ml-1 font-light text-gray-500 italic">
+              <p className="text-purple-700 font-medium self-center ml-2">
                 (optional)
               </p>
             )}
           </div>
-          <div className="grid-cols-3 gap-y-8 gap-x-4 justify-items-center items-center justify-evenly">
+          <div className="grid grid-cols-3 gap-x-2 gap-y-8 justify-items-center items-center justify-evenly mt-4">
             {frames.map((frame) => (
               <SelectFrameCard
                 key={frame.displayName}
                 frame={frame}
-                selectedFrame={selectedFrame}
+                isSelected={frame === selectedFrame}
                 setSelectedFrame={setSelectedFrame}
               />
             ))}

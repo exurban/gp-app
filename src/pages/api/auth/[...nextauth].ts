@@ -107,7 +107,7 @@ const options: NextAuthOptions = {
     username: 'postgres',
     password: 'postgres',
     database: 'photos',
-    synchronize: true,
+    synchronize: false,
   },
 
   session: {

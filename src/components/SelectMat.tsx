@@ -15,23 +15,20 @@ const SelectMat: React.FC<Props> = ({ mats, selectedMat, setSelectedMat }) => {
 
   return (
     <>
-      <hr className="my-3" />
-      <div>
-        <h5 className="my-2">Add a mat.</h5>
+      <hr className="my-5 dark:border-blueGray-600" />
+      <div className="flex flex-row mt-3 align-baseline">
+        <h5 className="text-2xl text-purple-500">Add a mat.</h5>
 
-        <p className="text-blue-500 font-medium self-center ml-2">
-          +${mats[0]?.retailPrice}
-        </p>
-        <p className="text-gray-500 font-light italic self-center ml-1">
-          (optional)
+        <p className="text-purple-700 font-medium self-center ml-2">
+          (+${mats[0]?.retailPrice}, optional)
         </p>
       </div>
-      <div className="grid-cols-3 gap-x-4 gap-y-8 justify-items-center items-start justify-evenly">
+      <div className="grid grid-cols-3 gap-x-2 justify-items-center items-center justify-evenly">
         {mats?.map((mat) => (
           <SelectMatCard
             key={mat.displayName}
             mat={mat}
-            selectedMat={selectedMat}
+            isSelected={mat === selectedMat}
             setSelectedMat={setSelectedMat}
           />
         ))}
