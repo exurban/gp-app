@@ -1,6 +1,8 @@
+import router from 'next/router';
+
 const FavoritesMenuItem = (): JSX.Element => {
   const showFavorites = () => {
-    console.log(`show favorites`);
+    router.push(`/gallery/user/favorites`);
   };
 
   const StarIcon = () => {

@@ -42,8 +42,9 @@
     "react-responsive": "^8.2.0",
     "react-share": "^4.4.0",
     "react-spinners": "^0.10.6",
+    "react-toastify": "^7.0.4",
     "stripe": "^8.149.0",
-    "tailwindcss": "^2.1.1"
+    "tailwindcss": "^2.1.2"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.21.3",

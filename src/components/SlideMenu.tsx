@@ -1,6 +1,15 @@
-import { useRouter } from "next/router";
-import { PhotoInfoFragment } from "../graphql-operations";
-import { Menu, Transition } from "@headlessui/react";
+import React, { useMemo } from 'react';
+import { useRouter } from 'next/router';
+import { useQuery, useMutation } from '@apollo/client';
+import { useSession } from 'next-auth/client';
+import {
+  FavoritesDocument,
+  AddPhotoToFavoritesDocument,
+  RemovePhotoFromFavoritesDocument,
+  PhotoInfoFragment,
+  ShoppingBagItemsDocument,
+} from '../graphql-operations';
+import { Menu, Transition } from '@headlessui/react';
 
 const DotsVertical = () => {
   return (
@@ -83,12 +92,21 @@ type Props = {
 };
 
 const SlideMenu: React.FC<Props> = ({ photo }) => {
+  const [session] = useSession();
   const router = useRouter();
+  const [addToFavorites] = useMutation(AddPhotoToFavoritesDocument);
+  const [removeFromFavorites] = useMutation(RemovePhotoFromFavoritesDocument);
+
+  const signinFirst = () => {
+    localStorage.setItem('redirectUrl', router.pathname);
+    localStorage.setItem('favPhoto', photo.id);
+    router.push('/auth/signin');
+  };
 
   const showInCarousel = () => {
     let { pathname } = router;
 
-    if (!pathname || typeof pathname !== "string") {
+    if (!pathname || typeof pathname !== 'string') {
       return;
     }
 
@@ -97,27 +115,181 @@ const SlideMenu: React.FC<Props> = ({ photo }) => {
     }
 
     if (pathname.includes(`/[name]`)) {
-      pathname = pathname.replace(`/[name]`, "");
+      pathname = pathname.replace(`/[name]`, '');
       const { name } = router.query;
 
       router.push({
         pathname: `${pathname}/${name}`,
-        query: { sku: photo?.sku }
+        query: { sku: photo?.sku },
       });
     } else {
       router.push({
         pathname: `${pathname}/`,
-        query: { sku: photo?.sku }
+        query: { sku: photo?.sku },
       });
     }
   };
-  const addToFavorites = () => {
-    console.log({ photo });
+
+  const addPhotoToFavorites = () => {
+    if (!session) {
+      signinFirst();
+      return;
+    }
+
+    let success;
+    let msg;
+
+    addToFavorites({
+      variables: { photoId: parseInt(photo.id) },
+      optimisticResponse: {
+        __typename: 'Mutation',
+        addPhotoToFavorites: {
+          success: true,
+          message: `Added ${photo.title} to your favorites.`,
+          addedPhotoWithId: photo.id,
+          __typename: 'AddPhotoToFavoritesResponse',
+        },
+      },
+      update: (cache, { data: { ...newPhotoResponse } }) => {
+        const { ...existing } = cache.readQuery({
+          query: FavoritesDocument,
+        });
+
+        const response = newPhotoResponse.addPhotoToFavorites;
+        success = response.success;
+        msg = response.message;
+
+        const existingPhotos = existing.favorites?.photoList || [];
+
+        cache.writeQuery({
+          query: FavoritesDocument,
+          data: {
+            favorites: {
+              __typename: 'FavoritesResponse',
+              photoList: photo
+                ? [photo, ...existingPhotos]
+                : [...existingPhotos],
+            },
+          },
+        });
+      },
+    });
+    // {
+    //   success
+    //     ? toasts.success({
+    //         title: 'Added',
+    //         message: msg,
+    //       })
+    //     : toasts.warning({
+    //         title: 'Failed to add.',
+    //         message: msg,
+    //       });
+    // }
+  };
+
+  const removePhotoFromFavorites = () => {
+    console.log(`removing from favorites.`);
+    if (!session) {
+      signinFirst();
+      return;
+    }
+
+    let success;
+    let msg;
+
+    removeFromFavorites({
+      variables: { photoId: parseInt(photo.id) },
+      optimisticResponse: {
+        __typename: 'Mutation',
+        removePhotoFromFavorites: {
+          success: true,
+          message: `Successfully removed ${photo.title} from your favorites.`,
+          removedPhotoWithId: photo.id,
+          __typename: 'RemovePhotoFromFavoritesResponse',
+        },
+      },
+      update: (cache, { data: { ...removePhotoResponse } }) => {
+        const { ...existing } = cache.readQuery({
+          query: FavoritesDocument,
+        });
+
+        const response = removePhotoResponse.removePhotoFromFavorites;
+        const idOfPhotoToRemove = response.removedPhotoWithId;
+        success = response.success;
+        msg = response.message;
+
+        const existingPhotos = existing.favorites?.photoList || [];
+
+        cache.writeQuery({
+          query: FavoritesDocument,
+          data: {
+            favorites: {
+              __typename: 'FavoritesResponse',
+              photoList: existingPhotos.filter(
+                (rec) => rec.id != idOfPhotoToRemove
+              ),
+            },
+          },
+        });
+      },
+    });
+    // {
+    //   success
+    //     ? toasts.success({
+    //         title: 'Removed',
+    //         message: msg,
+    //       })
+    //     : toasts.warning({
+    //         title: 'Failed to remove.',
+    //         message: msg,
+    //       });
+    // }
+    removeFromFavorites({
+      variables: { photoId: parseInt(photo.id) },
+      update: (cache, { data: { ...removePhotoResponse } }) => {
+        const { ...existing } = cache.readQuery({
+          query: FavoritesDocument,
+        });
+        const photoToRemove =
+          removePhotoResponse.removePhotoFromFavorites.removedPhotoWithId;
+        const existingPhotos = existing.favorites?.photoList || [];
+
+        cache.writeQuery({
+          query: FavoritesDocument,
+          data: {
+            favorites: {
+              __typename: 'FavoritesResponse',
+              photoList: existingPhotos.filter(
+                (rec) => rec.id != photoToRemove
+              ),
+            },
+          },
+        });
+      },
+    });
   };
 
   const addToShoppingBag = () => {
-    console.log({ photo });
+    router.push(`/shop/options/${photo.sku}`);
   };
+
+  const viewInShoppingBag = () => {
+    router.push(`/shop/review-order`);
+  };
+
+  const { data: favs } = useQuery(FavoritesDocument);
+  const inFavorites = useMemo(() => {
+    const favIds = favs?.favorites?.photoList?.map((f) => f.id);
+    return favIds ? favIds.includes(photo.id) : false;
+  }, [favs]);
+
+  const { data: bagItems } = useQuery(ShoppingBagItemsDocument);
+  const inShoppingBag = useMemo(() => {
+    const bagItemIds = bagItems?.shoppingBagItems?.dataList?.map(
+      (b) => b.photo.id
+    );
+    return bagItemIds ? bagItemIds.includes(photo.id) : false;
+  }, [bagItems]);
 
   return (
     <div className="flex items-center justify-center p-2">
@@ -155,8 +327,8 @@ const SlideMenu: React.FC<Props> = ({ photo }) => {
                           href={`/image/${photo.sku}`}
                           className={`${
                             active
-                              ? "bg-gray-100 text-gray-900 dark:bg-coolGray-600 dark:text-coolGray-50"
-                              : "text-gray-700 dark:text-coolGray-100"
+                              ? 'bg-gray-100 text-gray-900 dark:bg-coolGray-600 dark:text-coolGray-50'
+                              : 'text-gray-700 dark:text-coolGray-100'
                           }  flex items-center w-full px-4 py-2 text-sm leading-5 text-left`}
                         >
                           <InfoIcon /> <p className="ml-2">Info</p>
@@ -170,44 +342,85 @@ const SlideMenu: React.FC<Props> = ({ photo }) => {
                           href={`#/carousel/subject/land/${photo.sku}`}
                           className={`${
                             active
-                              ? "bg-gray-100 text-gray-900 dark:bg-coolGray-600 dark:text-coolGray-50"
-                              : "text-gray-700 dark:text-coolGray-100"
+                              ? 'bg-gray-100 text-gray-900 dark:bg-coolGray-600 dark:text-coolGray-50'
+                              : 'text-gray-700 dark:text-coolGray-100'
                           }  flex items-center w-full px-4 py-2 text-sm leading-5 text-left`}
                         >
                           <ExpandIcon /> <p className="ml-2">View Larger</p>
                         </a>
                       )}
                     </Menu.Item>
-                    <Menu.Item onClick={() => addToFavorites()}>
-                      {({ active }) => (
-                        <a
-                          aria-label="add to favorites"
-                          href="#favorites"
-                          className={`${
-                            active
-                              ? "bg-gray-100 text-gray-900 dark:bg-coolGray-600 dark:text-coolGray-50"
-                              : "text-gray-700 dark:text-coolGray-100"
-                          }  flex items-center w-full px-4 py-2 text-sm leading-5 text-left`}
-                        >
-                          <PlusIcon /> <p className="ml-2">Add to Favorites</p>
-                        </a>
-                      )}
-                    </Menu.Item>
-                    <Menu.Item onClick={() => addToShoppingBag()}>
-                      {({ active }) => (
-                        <a
-                          aria-label="add to shopping bag"
-                          href="#shoppingBag"
-                          className={`${
-                            active
-                              ? "bg-gray-100 text-gray-900 dark:bg-coolGray-600 dark:text-coolGray-50"
-                              : "text-gray-700 dark:text-coolGray-100"
-                          }  flex items-center w-full px-4 py-2 text-sm leading-5 text-left`}
-                        >
-                          <PlusIcon /> <p className="ml-2">Add to Shopping Bag</p>
-                        </a>
-                      )}
-                    </Menu.Item>
+                    {inFavorites ? (
+                      <Menu.Item onClick={() => removeFromFavorites()}>
+                        {({ active }) => (
+                          <a
+                            aria-label="remove from favorites"
+                            href="#favorites"
+                            className={`${
+                              active
+                                ? 'bg-gray-100 text-gray-900 dark:bg-coolGray-600 dark:text-coolGray-50'
+                                : 'text-gray-700 dark:text-coolGray-100'
+                            }  flex items-center w-full px-4 py-2 text-sm leading-5 text-left`}
+                          >
+                            <PlusIcon />{' '}
+                            <p className="ml-2">Remove from Favorites</p>
+                          </a>
+                        )}
+                      </Menu.Item>
+                    ) : (
+                      <Menu.Item onClick={() => addToFavorites()}>
+                        {({ active }) => (
+                          <a
+                            aria-label="add to favorites"
+                            href="#favorites"
+                            className={`${
+                              active
+                                ? 'bg-gray-100 text-gray-900 dark:bg-coolGray-600 dark:text-coolGray-50'
+                                : 'text-gray-700 dark:text-coolGray-100'
+                            }  flex items-center w-full px-4 py-2 text-sm leading-5 text-left`}
+                          >
+                            <PlusIcon />{' '}
+                            <p className="ml-2">Add to Favorites</p>
+                          </a>
+                        )}
+                      </Menu.Item>
+                    )}
+
+                    {inShoppingBag ? (
+                      <Menu.Item onClick={() => addToShoppingBag()}>
+                        {({ active }) => (
+                          <a
+                            aria-label="view in shopping bag"
+                            href="/shop/review-order"
+                            className={`${
+                              active
+                                ? 'bg-gray-100 text-gray-900 dark:bg-coolGray-600 dark:text-coolGray-50'
+                                : 'text-gray-700 dark:text-coolGray-100'
+                            }  flex items-center w-full px-4 py-2 text-sm leading-5 text-left`}
+                          >
+                            <PlusIcon />{' '}
+                            <p className="ml-2">View in Shopping Bag</p>
+                          </a>
+                        )}
+                      </Menu.Item>
+                    ) : (
+                      <Menu.Item onClick={() => addToShoppingBag()}>
+                        {({ active }) => (
+                          <a
+                            aria-label="add to shopping bag"
+                            href="#shoppingBag"
+                            className={`${
+                              active
+                                ? 'bg-gray-100 text-gray-900 dark:bg-coolGray-600 dark:text-coolGray-50'
+                                : 'text-gray-700 dark:text-coolGray-100'
+                            }  flex items-center w-full px-4 py-2 text-sm leading-5 text-left`}
+                          >
+                            <PlusIcon />{' '}
+                            <p className="ml-2">Add to Shopping Bag</p>
+                          </a>
+                        )}
+                      </Menu.Item>
+                    )}
                   </div>
                 </Menu.Items>
               </Transition>
