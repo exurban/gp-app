@@ -24,13 +24,20 @@ const UserFavoritesPage: React.FC = () => {
 
   const photos = data.favorites?.photoList;
 
-  if (!photos) return <p>Failed to fetch any photos. Maybe empty?</p>;
+  if (!photos || photos.length < 1)
+    return (
+      <div>
+        <h5 className="text-blueGray-800 dark:text-white w-5/6 mx-auto text-center text-xl lg:text-2xl xl:text-4xl my-12">
+          There are no photos saved to your favorites.
+        </h5>
+        <h5 className="text-blueGray-800 dark:text-white w-5/6 mx-auto text-center text-xl lg:text-2xl xl:text-4xl my-12">
+          Please favorite a photo or two and come back.
+        </h5>
+      </div>
+    );
 
   return (
     <>
-      <div>
-        <h1>User Favorites Page</h1>
-      </div>
       <Gallery photos={photos} />
     </>
   );

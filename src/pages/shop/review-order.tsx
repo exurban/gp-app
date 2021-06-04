@@ -89,8 +89,10 @@ const ReviewOrderPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col w-11/12 max-w-3xl mx-auto my-5">
-      <h1>Review Your Order</h1>
+    <div className="flex flex-col w-11/12 max-w-3xl mx-auto my-5 dark:text-white">
+      <h1 className="text-xl lg:text-2xl xl:text-4xl text-center mb-8 dark:text-white">
+        Review Your Order
+      </h1>
       {products.map((product) => (
         <div key={product.id} className="w-full pt-4">
           {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}

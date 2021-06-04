@@ -1,9 +1,20 @@
+import { useMemo } from 'react';
+import { useQuery } from '@apollo/client';
+import { FavoritesDocument } from '../graphql-operations';
 import router from 'next/router';
+import React from 'react';
+import { BadgePrimary } from './Badge';
 
 const FavoritesMenuItem = (): JSX.Element => {
   const showFavorites = () => {
     router.push(`/gallery/user/favorites`);
   };
+
+  const { data } = useQuery(FavoritesDocument);
+
+  const favoritesCount = useMemo(() => {
+    return data?.favorites.photoList ? data.favorites.photoList.length : 0;
+  }, [data]);
 
   const StarIcon = () => {
     return (
@@ -26,11 +37,12 @@ const FavoritesMenuItem = (): JSX.Element => {
 
   return (
     <button
-      className="mr-6 text-coolGray-800 hover:text-purple-600 dark:text-white dark:hover:text-purple-500"
+      className="mr-6 text-coolGray-800 hover:text-purple-600 dark:text-white dark:hover:text-purple-500 relative p-2"
       aria-label="favorites"
       onClick={() => showFavorites()}
     >
       <StarIcon />
+      {favoritesCount > 0 ? <BadgePrimary text={favoritesCount} /> : null}
     </button>
   );
 };

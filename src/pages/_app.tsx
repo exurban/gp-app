@@ -9,6 +9,8 @@ import Layout from '../components/Layout';
 import CarouselLayout from '../components/CarouselLayout';
 import { useRouter } from 'next/router';
 import * as gtag from '../utils/gtag';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   const apolloClient = useApollo(pageProps);
@@ -38,6 +40,7 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
                 <Component {...pageProps} />
               </Layout>
             )}
+            <ToastContainer />
           </ThemeProvider>
         </AuthProvider>
       </ApolloProvider>

@@ -6,6 +6,7 @@ import {
   InMemoryCache,
   NormalizedCacheObject,
 } from '@apollo/client';
+import { getSession } from 'next-auth/client';
 import merge from 'deepmerge';
 import { setContext } from '@apollo/client/link/context';
 import isEqual from 'lodash/isEqual';
@@ -27,14 +28,16 @@ const httpLink = createHttpLink({
 
 const authLink = setContext(async (_, { headers }) => {
   if (typeof window !== 'undefined') {
-    // const token = await getToken();
-    const token = '';
-    return {
-      headers: {
-        ...headers,
-        Authorization: token ? `Bearer ${token}` : '',
-      },
-    };
+    const session = await getSession();
+    if (session && typeof session !== 'undefined') {
+      const token = session.accessToken;
+      return {
+        headers: {
+          ...headers,
+          authorization: token ? `Bearer ${token}` : '',
+        },
+      };
+    }
   }
   return undefined;
 });
@@ -43,7 +46,6 @@ function createApolloClient() {
   return new ApolloClient({
     ssrMode: typeof window === 'undefined',
     link: authLink.concat(httpLink),
-    // link: httpLink,
     cache: new InMemoryCache(),
   });
 }

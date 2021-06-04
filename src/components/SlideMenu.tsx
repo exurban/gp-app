@@ -10,6 +10,7 @@ import {
   ShoppingBagItemsDocument,
 } from '../graphql-operations';
 import { Menu, Transition } from '@headlessui/react';
+import { toast } from 'react-toastify';
 
 const DotsVertical = () => {
   return (
@@ -87,6 +88,50 @@ const PlusIcon = () => {
   );
 };
 
+const MinusIcon = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+      />
+    </svg>
+  );
+};
+
+const ViewIcon = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+      />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+      />
+    </svg>
+  );
+};
+
 type Props = {
   photo: PhotoInfoFragment;
 };
@@ -96,6 +141,16 @@ const SlideMenu: React.FC<Props> = ({ photo }) => {
   const router = useRouter();
   const [addToFavorites] = useMutation(AddPhotoToFavoritesDocument);
   const [removeFromFavorites] = useMutation(RemovePhotoFromFavoritesDocument);
+
+  const toastSuccess = (msg: string) => {
+    console.log(`Success toast.`);
+    toast.success(msg);
+  };
+
+  const toastFail = (msg: string) => {
+    console.log(`Warning toast.`);
+    toast.warning(msg);
+  };
 
   const signinFirst = () => {
     localStorage.setItem('redirectUrl', router.pathname);
@@ -174,17 +229,11 @@ const SlideMenu: React.FC<Props> = ({ photo }) => {
         });
       },
     });
-    // {
-    //   success
-    //     ? toasts.success({
-    //         title: 'Added',
-    //         message: msg,
-    //       })
-    //     : toasts.warning({
-    //         title: 'Failed to add.',
-    //         message: msg,
-    //       });
-    // }
+    {
+      success
+        ? toastSuccess(msg ? msg : 'Success!')
+        : toastFail(msg ? msg : 'Failed.');
+    }
   };
 
   const removePhotoFromFavorites = () => {
@@ -233,17 +282,11 @@ const SlideMenu: React.FC<Props> = ({ photo }) => {
         });
       },
     });
-    // {
-    //   success
-    //     ? toasts.success({
-    //         title: 'Removed',
-    //         message: msg,
-    //       })
-    //     : toasts.warning({
-    //         title: 'Failed to remove.',
-    //         message: msg,
-    //       });
-    // }
+    {
+      success
+        ? toastSuccess(msg ? msg : 'Success!')
+        : toastFail(msg ? msg : 'Failed.');
+    }
     removeFromFavorites({
       variables: { photoId: parseInt(photo.id) },
       update: (cache, { data: { ...removePhotoResponse } }) => {
@@ -351,7 +394,7 @@ const SlideMenu: React.FC<Props> = ({ photo }) => {
                       )}
                     </Menu.Item>
                     {inFavorites ? (
-                      <Menu.Item onClick={() => removeFromFavorites()}>
+                      <Menu.Item onClick={() => removePhotoFromFavorites()}>
                         {({ active }) => (
                           <a
                             aria-label="remove from favorites"
@@ -362,13 +405,13 @@ const SlideMenu: React.FC<Props> = ({ photo }) => {
                                 : 'text-gray-700 dark:text-coolGray-100'
                             }  flex items-center w-full px-4 py-2 text-sm leading-5 text-left`}
                           >
-                            <PlusIcon />{' '}
+                            <MinusIcon />{' '}
                             <p className="ml-2">Remove from Favorites</p>
                           </a>
                         )}
                       </Menu.Item>
                     ) : (
-                      <Menu.Item onClick={() => addToFavorites()}>
+                      <Menu.Item onClick={() => addPhotoToFavorites()}>
                         {({ active }) => (
                           <a
                             aria-label="add to favorites"
@@ -387,7 +430,7 @@ const SlideMenu: React.FC<Props> = ({ photo }) => {
                     )}
 
                     {inShoppingBag ? (
-                      <Menu.Item onClick={() => addToShoppingBag()}>
+                      <Menu.Item onClick={() => viewInShoppingBag()}>
                         {({ active }) => (
                           <a
                             aria-label="view in shopping bag"
@@ -398,7 +441,7 @@ const SlideMenu: React.FC<Props> = ({ photo }) => {
                                 : 'text-gray-700 dark:text-coolGray-100'
                             }  flex items-center w-full px-4 py-2 text-sm leading-5 text-left`}
                           >
-                            <PlusIcon />{' '}
+                            <ViewIcon />{' '}
                             <p className="ml-2">View in Shopping Bag</p>
                           </a>
                         )}

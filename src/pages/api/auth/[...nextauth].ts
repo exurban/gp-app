@@ -23,6 +23,8 @@ const getApiToken = async (args: GetApiTokenInput) => {
 
   const token = await graphQLClient.request(GetApiTokenDocument, input);
 
+  console.log(`token: ${JSON.stringify(token, null, 2)}`);
+
   return token.getApiToken;
 };
 

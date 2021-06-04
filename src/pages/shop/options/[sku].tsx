@@ -121,8 +121,12 @@ const ConfigureForPurchasePage: React.FC = () => {
 
   const image = photo.photoImage;
   const aspectRatio = image?.aspectRatio;
-  const pgName = photo?.photographer?.name as string;
-  const locationName = photo?.location?.name as string;
+
+  if (!photo.photographer) return null;
+  if (!photo.location) return null;
+
+  const pgName = photo.photographer.name;
+  const locationName = photo.location.name;
 
   const imagePrices = [
     {
@@ -223,33 +227,37 @@ const ConfigureForPurchasePage: React.FC = () => {
             <p className="text-xs md:text-sm lg:text-base xl:text-lg uppercase mr-2 text-coolGray-400">
               Photographer:
             </p>
-            <Link
-              href={`/gallery/photographer/${encodeURIComponent(
-                pgName.toLowerCase()
-              )}`}
-            >
-              <a>
-                <h3 className="text-base md:text-lg lg:text-xl xl:text-2xl mt-3 lg:mt-4 xl:mt-5 hover:text-indigo-700">
-                  {pgName}
-                </h3>
-              </a>
-            </Link>
+            {pgName && (
+              <Link
+                href={`/gallery/photographer/${encodeURIComponent(
+                  pgName.toLowerCase()
+                )}`}
+              >
+                <a>
+                  <h3 className="text-base md:text-lg lg:text-xl xl:text-2xl mt-3 lg:mt-4 xl:mt-5 hover:text-indigo-700">
+                    {pgName}
+                  </h3>
+                </a>
+              </Link>
+            )}
           </div>
           <div className="flex flex-row items-baseline leading-8">
             <p className="text-xs md:text-sm lg:text-base xl:text-lg uppercase mr-2 text-coolGray-400">
               Location:
             </p>
-            <Link
-              href={`/gallery/location/${encodeURIComponent(
-                locationName.toLowerCase()
-              )}`}
-            >
-              <a>
-                <h3 className="text-base md:text-lg lg:text-xl xl:text-2xl mt-2 lg:mt-3 xl:mt-4 text-indigo-700 hover:text-purple-600">
-                  {locationName}
-                </h3>
-              </a>
-            </Link>
+            {locationName && (
+              <Link
+                href={`/gallery/location/${encodeURIComponent(
+                  locationName.toLowerCase()
+                )}`}
+              >
+                <a>
+                  <h3 className="text-base md:text-lg lg:text-xl xl:text-2xl mt-2 lg:mt-3 xl:mt-4 text-indigo-700 hover:text-purple-600">
+                    {locationName}
+                  </h3>
+                </a>
+              </Link>
+            )}
           </div>
           <div className="flex flex-row items-baseline leading-8">
             <p className="text-xs md:text-sm lg:text-base xl:text-lg uppercase mr-2 text-coolGray-400">

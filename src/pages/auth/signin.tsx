@@ -13,6 +13,7 @@ const SignInPage: React.FC = () => {
 
   if (typeof window !== 'undefined' && session) {
     // * redirect to sign-success to complete sign in process
+    console.log(`redirecting to signin-success`);
     router.push('/auth/signin-success');
   }
 

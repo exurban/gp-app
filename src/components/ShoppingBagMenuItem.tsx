@@ -1,7 +1,20 @@
+import { useMemo } from 'react';
+import { useQuery } from '@apollo/client';
+import { ShoppingBagItemsDocument } from '../graphql-operations';
+import { BadgePrimary } from '../components/Badge';
+
 const ShoppingBagMenuItem = (): JSX.Element => {
   const showShoppingBag = () => {
     console.log(`show shopping bag`);
   };
+
+  const { data } = useQuery(ShoppingBagItemsDocument);
+
+  const shoppingBagItemsCount = useMemo(() => {
+    return data?.shoppingBagItems.dataList
+      ? data.shoppingBagItems.dataList.length
+      : 0;
+  }, [data]);
 
   const ShoppingBagIcon = () => {
     return (
@@ -24,11 +37,14 @@ const ShoppingBagMenuItem = (): JSX.Element => {
 
   return (
     <button
-      className="mr-6 text-coolGray-800 hover:text-purple-600 dark:text-white dark:hover:text-purple-500"
+      className="mr-6 text-coolGray-800 hover:text-purple-600 dark:text-white dark:hover:text-purple-500 relative p-2"
       aria-label="shopping bag"
       onClick={() => showShoppingBag()}
     >
       <ShoppingBagIcon />
+      {shoppingBagItemsCount > 0 ? (
+        <BadgePrimary text={shoppingBagItemsCount} />
+      ) : null}
     </button>
   );
 };

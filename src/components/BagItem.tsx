@@ -5,13 +5,13 @@ import {
   ShoppingBagItemsDocument,
 } from '../graphql-operations';
 import { useMutation } from '@apollo/client';
+import { toast } from 'react-toastify';
 
 type Props = {
   product: Product;
 };
 
 const BagItem: React.FC<Props> = ({ product }) => {
-  // const toasts = useToasts();
   const photo = product.photo;
   const image = photo.photoImage;
   const print = product.print;
@@ -21,9 +21,13 @@ const BagItem: React.FC<Props> = ({ product }) => {
     ? `${print.dimension1}"w x ${print.dimension2}"h`
     : `${print.dimension2}"w x ${print.dimension1}"h`;
 
+  const toastSuccess = (msg: string) => {
+    toast.success(msg);
+  };
+
   const [deleteProduct] = useMutation(DeleteProductDocument, {
     onCompleted() {
-      console.log(`Successfully deleted product.`);
+      toastSuccess(`Successfully removed product from your shopping bag.`);
     },
   });
 
@@ -41,7 +45,7 @@ const BagItem: React.FC<Props> = ({ product }) => {
 
   return (
     <>
-      <div className="container grid-cols-10 gap-2">
+      <div className="container grid grid-cols-10 gap-2">
         <div className="col-start-1 col-span-2 overflow-hidden relative">
           <Image
             className="rounded"
