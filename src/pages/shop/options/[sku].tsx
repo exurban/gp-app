@@ -24,24 +24,18 @@ const ConfigureForPurchasePage: React.FC = () => {
   const [session] = useSession();
   const router = useRouter();
 
-  const [selectedPrintType, setSelectedPrintType] = useState<
-    string | undefined
-  >(undefined);
-  const [selectedPrint, setSelectedPrint] = useState<
-    PrintInfoFragment | undefined
-  >(undefined);
-  const [matsToDisplay, setMatsToDisplay] = useState<
-    MatInfoFragment[] | undefined
-  >(undefined);
-  const [selectedMat, setSelectedMat] = useState<MatInfoFragment | undefined>(
-    undefined
-  );
-  const [framesToDisplay, setFramesToDisplay] = useState<
-    FrameInfoFragment[] | undefined
-  >(undefined);
-  const [selectedFrame, setSelectedFrame] = useState<
-    FrameInfoFragment | undefined
-  >(undefined);
+  const [selectedPrintType, setSelectedPrintType] =
+    useState<string | undefined>(undefined);
+  const [selectedPrint, setSelectedPrint] =
+    useState<PrintInfoFragment | undefined>(undefined);
+  const [matsToDisplay, setMatsToDisplay] =
+    useState<MatInfoFragment[] | undefined>(undefined);
+  const [selectedMat, setSelectedMat] =
+    useState<MatInfoFragment | undefined>(undefined);
+  const [framesToDisplay, setFramesToDisplay] =
+    useState<FrameInfoFragment[] | undefined>(undefined);
+  const [selectedFrame, setSelectedFrame] =
+    useState<FrameInfoFragment | undefined>(undefined);
 
   const [addProduct] = useMutation(AddProductDocument, {
     refetchQueries: [
@@ -200,6 +194,8 @@ const ConfigureForPurchasePage: React.FC = () => {
       frameId: frameId,
     };
 
+    console.log(`create product input: ${JSON.stringify(input, null, 2)}`);
+
     const addVariables: AddProductMutationVariables = { input };
 
     addProduct({
@@ -300,20 +296,12 @@ const ConfigureForPurchasePage: React.FC = () => {
           )}
 
           <button
-            className="bg-indigo-700 text-white rounded py-2 px-5 my-10 ml-auto mr-0"
-            onClick={() => createProduct()}
-          >
-            Add to Bag
-          </button>
-          {/* <Button
-            palette="primary"
-            width="120px"
-            margin="40px 0 40px auto"
+            className="bg-indigo-700 text-white rounded py-2 px-5 my-10 ml-auto mr-0 disabled:opacity-50"
             disabled={selectedPrint === undefined}
             onClick={() => createProduct()}
           >
             Add to Bag
-          </Button> */}
+          </button>
         </div>
       </div>
     </>
