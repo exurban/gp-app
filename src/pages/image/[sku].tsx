@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { GetStaticProps, GetStaticPaths } from 'next';
 import { useQuery, useMutation } from '@apollo/client';
 import { addApolloState, initializeApollo } from '../../lib/apolloClient';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/client';
 import Image from 'next/image';
 import {
   PhotoInfoFragment,
@@ -27,10 +28,11 @@ import {
   LinkedinShareButton,
   LinkedinIcon,
 } from 'react-share';
+import { toast } from 'react-toastify';
 
 const PhotoInfo: React.FC = () => {
   const router = useRouter();
-  const [isSignedIn] = useState(false);
+  const [session] = useSession();
   const [addToFavorites] = useMutation(AddPhotoToFavoritesDocument);
 
   const mdScreen = useMediaQuery({ query: '(min-width: 768px)' });
@@ -69,15 +71,22 @@ const PhotoInfo: React.FC = () => {
   const tags = photo.tagsForPhoto?.map((x) => x.tag);
   const collections = photo.collectionsForPhoto?.map((x) => x.collection);
 
-  //! route to Auth0 signin
+  const toastSuccess = (msg: string) => {
+    toast.success(msg);
+  };
+
+  const toastFail = (msg: string) => {
+    toast.warning(msg);
+  };
+
   const signinFirst = () => {
-    localStorage.setItem('redirectUrl', router.pathname);
+    localStorage.setItem('redirectUrl', router.asPath);
     localStorage.setItem('favPhoto', photo.id);
-    // router.push("/auth/signin");
+    router.push('/auth/signin');
   };
 
   const addPhotoToFavorites = () => {
-    if (!isSignedIn) {
+    if (!session) {
       signinFirst();
       return;
     }
@@ -121,7 +130,9 @@ const PhotoInfo: React.FC = () => {
       },
     });
     {
-      success ? console.log(`success: ${msg}`) : console.log(`failure: ${msg}`);
+      success
+        ? toastSuccess(msg ? msg : 'Success!')
+        : toastFail(msg ? msg : 'Failed.');
     }
   };
 
@@ -140,7 +151,10 @@ const PhotoInfo: React.FC = () => {
   }, [bagItems]);
 
   const onFavoritesClick = () => {
-    inFavorites ? router.push(`/favorites`) : addPhotoToFavorites();
+    console.log(`onFavoritesClick()`);
+    inFavorites
+      ? router.push(`/gallery/user/favorites`)
+      : addPhotoToFavorites();
   };
 
   const onShoppingBagClick = () => {
@@ -256,7 +270,7 @@ const PhotoInfo: React.FC = () => {
           <div className="bg-coolGray-100 dark:bg-coolGray-700 rounded-md my-8 mx-auto">
             <div className="flex flex-col md:flex-row content-evenly p-8">
               <button
-                className="flex flex-col items-center px-4 py-3 mb-3 md:mb-0 md:mr-4 border border-transparent text-base font-medium rounded-md text-purple-50 bg-indigo-600 shadow-lg hover:bg-purple-600 hover:text-white sm:px-8"
+                className="flex flex-col items-center px-4 py-3 mt-3 md:mt-0 md:ml-4 border border-transparent text-base font-medium rounded-md text-purple-50 bg-indigo-600 shadow-lg hover:bg-purple-600 hover:text-white sm:px-8"
                 onClick={() => onFavoritesClick()}
               >
                 {inFavorites ? `View in Favorites` : `Add to Favorites`}
