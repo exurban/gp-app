@@ -46,7 +46,8 @@ const ConfigureForPurchasePage: React.FC = () => {
     ],
     onCompleted(data) {
       // * if user was signed in, product was added to bag upon creation--push to review-order
-      if (session && data.addProduct.success && !data.addProduct.newProduct) {
+      // if (session && data.addProduct.success && !data.addProduct.newProduct) {
+      if (session && data.addProduct.success) {
         router.push('/shop/review-order');
       }
 

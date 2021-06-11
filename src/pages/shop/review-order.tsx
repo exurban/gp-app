@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { useSession } from 'next-auth/client';
+import { useMediaQuery } from 'react-responsive';
 
 import { ShoppingBagItemsDocument } from '../../graphql-operations';
 import ErrorMessage from '../../components/ErrorMessage';
 import Loader from '../../components/Loader';
 import BagItem from '../../components/BagItem';
+import BagItemMobile from '../../components/BagItemMobile';
 
 import { fetchPostJSON } from '../../utils/api-helpers';
 import getStripe from '../../utils/get-stripe';
@@ -13,6 +15,7 @@ import getStripe from '../../utils/get-stripe';
 const ReviewOrderPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [session] = useSession();
+  const tabletOrLarger = useMediaQuery({ query: '(min-width: 768px)' });
 
   const { loading, error, data } = useQuery(ShoppingBagItemsDocument);
 
@@ -59,12 +62,15 @@ const ReviewOrderPage: React.FC = () => {
 
   shippingCharge += 10 * mattedFramedOrMetalProducts.length;
 
-  const handleClick = async () => {
+  const checkout = async () => {
     setIsLoading(true);
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const response = await fetchPostJSON(`/api/checkout_sessions/cart`);
+    const response = await fetchPostJSON(
+      `/api/checkout_sessions/cart`,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      products
+    );
 
     if (response.statusCode === 500) {
       console.error(response.message);
@@ -90,14 +96,16 @@ const ReviewOrderPage: React.FC = () => {
 
   return (
     <div className="flex flex-col w-11/12 max-w-3xl mx-auto my-5 dark:text-white">
-      <h1 className="text-xl lg:text-2xl xl:text-4xl text-center mb-8 dark:text-white">
+      <h1 className="text-3xl xl:text-4xl text-center mb-8 dark:text-white">
         Review Your Order
       </h1>
       {products.map((product) => (
         <div key={product.id} className="w-full pt-4">
-          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-          {/* @ts-ignore */}
-          <BagItem product={product} />
+          {tabletOrLarger ? (
+            <BagItem product={product} />
+          ) : (
+            <BagItemMobile product={product} />
+          )}
         </div>
       ))}
       <div className="flex flex-col w-5/12 ml-auto mr-3">
@@ -119,9 +127,8 @@ const ReviewOrderPage: React.FC = () => {
       </div>
 
       <button
-        role="link"
-        className="py-2 px-3 ml-auto mr-0 my-20 bg-indigo-600 text-white"
-        onClick={handleClick}
+        className="bg-indigo-700 text-white rounded py-4 px-8 my-10 ml-auto mr-0 text-xl disabled:opacity-50"
+        onClick={checkout}
       >
         Checkout
       </button>

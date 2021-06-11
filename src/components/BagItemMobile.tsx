@@ -45,51 +45,51 @@ const BagItem: React.FC<Props> = ({ product }) => {
 
   return (
     <>
-      <div className="container grid grid-cols-10 gap-2">
-        <div className="col-start-1 col-span-3 row-start-1 row-span-6 overflow-hidden relative">
+      <div className="container grid grid-cols-4 gap-2 max-w-xl mx-auto">
+        <div className="col-span-4 w-64 h-64 justify-self-center overflow-hidden relative">
           <Image
-            className="rounded"
+            className="rounded-md"
             src={image.webpUrl}
             layout="fill"
             objectFit="contain"
-            objectPosition="top"
+            objectPosition="center"
             quality={80}
           />
         </div>
-        <h5 className="col-start-4 col-span-6">
+        <h5 className="row-start-2 col-start-1 col-span-4">
           {photo.title}, {displayDimensions}
         </h5>
         {/* <p className="mt-2">{photo.description}</p> */}
-        <p className="col-start-4 row-start-2 mt-2 text-sm lg:text-base 2xl:text-lg opacity-60 text-right">
+        <p className="col-start-1 row-start-3 mt-2 text-sm opacity-60 text-right">
           Print:
         </p>
-        <p className="col-start-5 col-span-5 row-start-2 mt-2 text-sm lg:text-base 2xl:text-lg">
+        <p className="col-start-2 col-span-2 row-start-3 mt-2 text-sm">
           {print.type === 'paper' ? 'Exhibition Paper' : 'Aluminum'}
         </p>
-        <p className="col-start-4 row-start-3 mt-2 text-sm lg:text-base 2xl:text-lg opacity-60 text-right">
+        <p className="col-start-1 row-start-4 mt-2 text-sm opacity-60 text-right">
           Mat:
         </p>
-        <p className="col-start-5 col-span-5 row-start-3 mt-2 text-sm lg:text-base 2xl:text-lg">
+        <p className="col-start-2 col-span-2 row-start-4 mt-2 text-sm">
           {mat ? mat.color : 'none'}
         </p>
-        <p className="col-start-4 row-start-4 mt-2 text-sm lg:text-base 2xl:text-lg opacity-60 text-right">
+        <p className="col-start-1 row-start-5 mt-2 text-sm opacity-60 text-right">
           Frame:
         </p>
-        <p className="col-start-5 col-span-5 row-start-4 mt-2 text-sm lg:text-base 2xl:text-lg">
+        <p className="col-start-2 col-span-2 row-start-5 mt-2 text-sm">
           {frame ? frame.displayName.toLowerCase() : ' none'}
         </p>
 
-        <div className="col-start-10 text-lg font-bold text-blue-500 pr-3 justify-self-end">
+        <div className="col-start-4 row-start-2 text-lg font-bold text-blue-500 pr-3 justify-self-end">
           ${product.totalRetailPrice}
         </div>
         <button
-          className="text-blue-500 row-start-5 col-start-10 justify-self-center"
+          className="text-blue-500 row-start-6 col-start-4 justify-self-center"
           onClick={() => onDelete()}
         >
           remove
         </button>
       </div>
-      <hr className="my-3 border-opacity-60" />
+      <hr className="my-3" />
     </>
   );
 };

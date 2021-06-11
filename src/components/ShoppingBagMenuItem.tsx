@@ -1,11 +1,14 @@
 import { useMemo } from 'react';
+import { useRouter } from 'next/router';
 import { useQuery } from '@apollo/client';
 import { ShoppingBagItemsDocument } from '../graphql-operations';
 import { BadgePrimary } from '../components/Badge';
 
 const ShoppingBagMenuItem = (): JSX.Element => {
+  const router = useRouter();
+
   const showShoppingBag = () => {
-    console.log(`show shopping bag`);
+    router.push(`/shop/review-order`);
   };
 
   const { data } = useQuery(ShoppingBagItemsDocument);

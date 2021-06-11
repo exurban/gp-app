@@ -151,7 +151,6 @@ const PhotoInfo: React.FC = () => {
   }, [bagItems]);
 
   const onFavoritesClick = () => {
-    console.log(`onFavoritesClick()`);
     inFavorites
       ? router.push(`/gallery/user/favorites`)
       : addPhotoToFavorites();
@@ -230,33 +229,37 @@ const PhotoInfo: React.FC = () => {
             <p className="text-xs md:text-sm lg:text-base xl:text-lg uppercase mr-2 text-coolGray-400">
               Photographer:
             </p>
-            <Link
-              href={`/gallery/photographer/${encodeURIComponent(
-                pgName.toLowerCase()
-              )}`}
-            >
-              <a>
-                <h3 className="text-base md:text-lg lg:text-xl xl:text-2xl mt-3 lg:mt-4 xl:mt-5 hover:text-indigo-700">
-                  {pgName}
-                </h3>
-              </a>
-            </Link>
+            {pgName && (
+              <Link
+                href={`/gallery/photographer/${encodeURIComponent(
+                  pgName.toLowerCase()
+                )}`}
+              >
+                <a>
+                  <h3 className="text-base md:text-lg lg:text-xl xl:text-2xl mt-3 lg:mt-4 xl:mt-5 hover:text-indigo-700">
+                    {pgName}
+                  </h3>
+                </a>
+              </Link>
+            )}
           </div>
           <div className="flex flex-row items-baseline leading-8">
             <p className="text-xs md:text-sm lg:text-base xl:text-lg uppercase mr-2 text-coolGray-400">
               Location:
             </p>
-            <Link
-              href={`/gallery/location/${encodeURIComponent(
-                locationName.toLowerCase()
-              )}`}
-            >
-              <a>
-                <h3 className="text-base md:text-lg lg:text-xl xl:text-2xl mt-2 lg:mt-3 xl:mt-4 hover:text-purple-600">
-                  {locationName}
-                </h3>
-              </a>
-            </Link>
+            {locationName && (
+              <Link
+                href={`/gallery/location/${encodeURIComponent(
+                  locationName.toLowerCase()
+                )}`}
+              >
+                <a>
+                  <h3 className="text-base md:text-lg lg:text-xl xl:text-2xl mt-2 lg:mt-3 xl:mt-4 hover:text-purple-600">
+                    {locationName}
+                  </h3>
+                </a>
+              </Link>
+            )}
           </div>
           <div className="flex flex-row items-baseline leading-8">
             <p className="text-xs md:text-sm lg:text-base xl:text-lg uppercase mr-2 text-coolGray-400">
@@ -270,13 +273,13 @@ const PhotoInfo: React.FC = () => {
           <div className="bg-coolGray-100 dark:bg-coolGray-700 rounded-md my-8 mx-auto">
             <div className="flex flex-col md:flex-row content-evenly p-8">
               <button
-                className="flex flex-col items-center px-4 py-3 mt-3 md:mt-0 md:ml-4 border border-transparent text-base font-medium rounded-md text-purple-50 bg-indigo-600 shadow-lg hover:bg-purple-600 hover:text-white sm:px-8"
+                className="flex flex-col items-center px-4 py-3 md:mt-0 border border-transparent text-base font-medium rounded-md text-purple-50 bg-indigo-600 shadow-lg hover:bg-purple-600 hover:text-white sm:px-8"
                 onClick={() => onFavoritesClick()}
               >
                 {inFavorites ? `View in Favorites` : `Add to Favorites`}
               </button>
               <button
-                className="flex flex-col items-center px-4 py-3 mt-3 md:mt-0 md:ml-4 border border-transparent text-base font-medium rounded-md text-purple-50 bg-indigo-600 shadow-lg hover:bg-purple-600 hover:text-white sm:px-8"
+                className="flex flex-col items-center px-4 py-3 mt-5 md:mt-0 md:ml-5 border border-transparent text-base font-medium rounded-md text-purple-50 bg-indigo-600 shadow-lg hover:bg-purple-600 hover:text-white sm:px-8"
                 onClick={() => onShoppingBagClick()}
               >
                 {inShoppingBag ? `View in Shopping Bag` : `Add to Shopping Bag`}

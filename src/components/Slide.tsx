@@ -24,7 +24,7 @@ const Slide: React.FC<{ photo: PhotoInfoFragment; priority: boolean }> = ({
         className="flex flex-row items-start"
         onDoubleClick={() => showInfo()}
       >
-        <div className="w-full relative overflow-hidden rounded-md shadow-lg">
+        <div className="w-full relative overflow-hidden rounded-md shadow-lg cursor-pointer">
           <Image
             src={img.webpUrl}
             alt={img.altText}
