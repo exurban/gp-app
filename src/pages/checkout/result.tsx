@@ -34,8 +34,8 @@ const CheckoutResultPage: NextPage = () => {
         {' '}
         Your photo(s) are being lovingly created just for you, in accordance
         with your order. Please expect your order to arrive within 2-3 weeks. We
-        hope you're delighted with your new photo(s) and we look forward to your
-        next visit.
+        hope you'll be delighted with your new photo(s) and we look forward to
+        your next visit.
       </p>
     </div>
   );
