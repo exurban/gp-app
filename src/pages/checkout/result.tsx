@@ -23,7 +23,7 @@ const CheckoutResultPage: NextPage = () => {
   const email = data?.payment_intent.charges.data[0].billing_details.email;
 
   return (
-    <div className="container w-5/6 max-w-3xl mx-auto">
+    <div className="container w-5/6 max-w-3xl mx-auto text-blueGray-800 dark:text-white">
       <h1 className="mt-4 text-xl xl:text-4xl">Thanks for your order!</h1>
 
       <p className="mt-5">

@@ -1,18 +1,24 @@
 // Email HTML body
-export const html = ({ url, email }: { url: string; email: string }): string => {
+export const html = ({
+  url,
+  email,
+}: {
+  url: string;
+  email: string;
+}): string => {
   // Insert invisible space into domains and email address to prevent both the
   // email address and the domain from being turned into a hyperlink by email
   // clients like Outlook and Apple mail, as this is confusing because it seems
   // like they are supposed to click on their email address to sign in.
-  const escapedEmail = `${email.replace(/\./g, "&#8203;.")}`;
+  const escapedEmail = `${email.replace(/\./g, '&#8203;.')}`;
 
   // Some simple styling options
-  const backgroundColor = "#f9f9f9";
-  const textColor = "#444444";
-  const mainBackgroundColor = "#ffffff";
-  const buttonBackgroundColor = "#574feb";
-  const buttonBorderColor = "#346df1";
-  const buttonTextColor = "#ffffff";
+  const backgroundColor = '#f9f9f9';
+  const textColor = '#444444';
+  const mainBackgroundColor = '#ffffff';
+  const buttonBackgroundColor = '#574feb';
+  const buttonBorderColor = '#346df1';
+  const buttonTextColor = '#ffffff';
 
   // Uses tables for layout and inline CSS due to email client limitations
   return `
@@ -20,7 +26,7 @@ export const html = ({ url, email }: { url: string; email: string }): string => 
   <table width="100%" border="0" cellspacing="20" cellpadding="0" style="background: ${mainBackgroundColor}; max-width: 600px; margin: auto; border-radius: 10px;">
     <tr>
       <td align="center" style="padding: 10px 0px 0px 0px; font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: ${textColor};">
-        Click the button below to sign in as 
+        Click the button below to sign in to gibbs-photography.com as 
       </td>
     </tr>
     <tr>
