@@ -8,8 +8,8 @@ import {
   PrintInfoFragment,
   MatInfoFragment,
   FrameInfoFragment,
-  AddProductDocument,
-  AddProductMutationVariables,
+  CreateProductDocument,
+  CreateProductMutationVariables,
   ShoppingBagItemsDocument,
 } from '../../../graphql-operations';
 import Loader from '../../../components/Loader';
@@ -37,7 +37,7 @@ const ConfigureForPurchasePage: React.FC = () => {
   const [selectedFrame, setSelectedFrame] =
     useState<FrameInfoFragment | undefined>(undefined);
 
-  const [addProduct] = useMutation(AddProductDocument, {
+  const [createProduct] = useMutation(CreateProductDocument, {
     refetchQueries: [
       {
         query: ShoppingBagItemsDocument,
@@ -47,7 +47,7 @@ const ConfigureForPurchasePage: React.FC = () => {
     onCompleted(data) {
       // * if user was signed in, product was added to bag upon creation--push to review-order
       console.log(JSON.stringify(data));
-      if (session && data.addProduct.success) {
+      if (session && data.createProduct.success) {
         router.push('/shop/review-order');
       }
 
@@ -57,8 +57,8 @@ const ConfigureForPurchasePage: React.FC = () => {
           'redirectUrl',
           'https://gibbs-photography.com/shop/review-order'
         );
-        if (data.addProduct.newProduct) {
-          localStorage.setItem('bagProduct', data.addProduct.newProduct.id);
+        if (data.createProduct.newProduct) {
+          localStorage.setItem('bagProduct', data.createProduct.newProduct.id);
         }
 
         router.push('/auth/signin');
@@ -177,7 +177,7 @@ const ConfigureForPurchasePage: React.FC = () => {
     },
   ];
 
-  const createProduct = () => {
+  const buildProduct = () => {
     let matId, frameId;
     if (!selectedPrint) return;
     if (selectedMat) {
@@ -197,10 +197,10 @@ const ConfigureForPurchasePage: React.FC = () => {
 
     console.log(`create product input: ${JSON.stringify(input, null, 2)}`);
 
-    const addVariables: AddProductMutationVariables = { input };
+    const createVariables: CreateProductMutationVariables = { input };
 
-    addProduct({
-      variables: addVariables,
+    createProduct({
+      variables: createVariables,
     });
   };
 
@@ -299,7 +299,7 @@ const ConfigureForPurchasePage: React.FC = () => {
           <button
             className="bg-indigo-700 text-white rounded py-2 px-5 my-10 ml-auto mr-0 disabled:opacity-50"
             disabled={selectedPrint === undefined}
-            onClick={() => createProduct()}
+            onClick={() => buildProduct()}
           >
             Add to Bag
           </button>

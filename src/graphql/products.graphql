@@ -40,8 +40,8 @@ query product($id: Int!) {
   }
 }
 
-mutation addProduct($input: AddProductInput!) {
-  addProduct(input: $input) {
+mutation createProduct($input: CreateProductInput!) {
+  createProduct(input: $input) {
     success
     message
     newProduct {

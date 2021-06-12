@@ -15,7 +15,7 @@ export type Scalars = {
   Int: number;
   Float: number;
   /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
-  DateTime: string;
+  DateTime: any;
 };
 
 /** Inputs to create a new Collection entity. */
@@ -221,20 +221,6 @@ export type AddProductImageResponse = {
   newProductImage?: Maybe<ProductImage>;
 };
 
-export type AddProductInput = {
-  photoId: Scalars['Int'];
-  printId: Scalars['Int'];
-  matId?: Maybe<Scalars['Int']>;
-  frameId?: Maybe<Scalars['Int']>;
-};
-
-export type AddProductResponse = {
-  __typename?: 'AddProductResponse';
-  success: Scalars['Boolean'];
-  message: Scalars['String'];
-  newProduct?: Maybe<Product>;
-};
-
 export type AddProductToShoppingBagResponse = {
   __typename?: 'AddProductToShoppingBagResponse';
   success: Scalars['Boolean'];
@@ -404,6 +390,20 @@ export type CollectionsResponse = {
   collections: Array<Collection>;
 };
 
+export type CreateProductInput = {
+  photoId: Scalars['Int'];
+  printId: Scalars['Int'];
+  matId?: Maybe<Scalars['Int']>;
+  frameId?: Maybe<Scalars['Int']>;
+};
+
+export type CreateProductResponse = {
+  __typename?: 'CreateProductResponse';
+  success: Scalars['Boolean'];
+  message: Scalars['String'];
+  newProduct?: Maybe<Product>;
+};
+
 export type FavoritesResponse = {
   __typename?: 'FavoritesResponse';
   /** Returns list of Photo objects in user's favorites. */
@@ -556,7 +556,7 @@ export type Mutation = {
   deleteProductImage: Scalars['Boolean'];
   addProductImageToMat: AddProductImageToMatResponse;
   addProductImageToFrame: AddProductImageToFrameResponse;
-  addProduct: AddProductResponse;
+  createProduct: CreateProductResponse;
   updateProduct: UpdateProductResponse;
   deleteProduct: SuccessMessageResponse;
   updateShareImagesFromCsv: UpdateShareImagesFromCsvResponse;
@@ -704,8 +704,8 @@ export type MutationAddProductImageToFrameArgs = {
   frameId: Scalars['Int'];
 };
 
-export type MutationAddProductArgs = {
-  input: AddProductInput;
+export type MutationCreateProductArgs = {
+  input: CreateProductInput;
 };
 
 export type MutationUpdateProductArgs = {
@@ -2299,13 +2299,13 @@ export type ProductQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export type AddProductMutationVariables = Exact<{
-  input: AddProductInput;
+export type CreateProductMutationVariables = Exact<{
+  input: CreateProductInput;
 }>;
 
-export type AddProductMutation = { __typename?: 'Mutation' } & {
-  addProduct: { __typename?: 'AddProductResponse' } & Pick<
-    AddProductResponse,
+export type CreateProductMutation = { __typename?: 'Mutation' } & {
+  createProduct: { __typename?: 'CreateProductResponse' } & Pick<
+    CreateProductResponse,
     'success' | 'message'
   > & {
       newProduct?: Maybe<
@@ -3875,16 +3875,16 @@ export const ProductDocument: DocumentNode<
     ...FrameInfoFragmentDoc.definitions,
   ],
 };
-export const AddProductDocument: DocumentNode<
-  AddProductMutation,
-  AddProductMutationVariables
+export const CreateProductDocument: DocumentNode<
+  CreateProductMutation,
+  CreateProductMutationVariables
 > = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'mutation',
-      name: { kind: 'Name', value: 'addProduct' },
+      name: { kind: 'Name', value: 'createProduct' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -3896,7 +3896,7 @@ export const AddProductDocument: DocumentNode<
             kind: 'NonNullType',
             type: {
               kind: 'NamedType',
-              name: { kind: 'Name', value: 'AddProductInput' },
+              name: { kind: 'Name', value: 'CreateProductInput' },
             },
           },
         },
@@ -3906,7 +3906,7 @@ export const AddProductDocument: DocumentNode<
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'addProduct' },
+            name: { kind: 'Name', value: 'createProduct' },
             arguments: [
               {
                 kind: 'Argument',
