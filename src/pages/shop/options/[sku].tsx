@@ -47,21 +47,26 @@ const ConfigureForPurchasePage: React.FC = () => {
     onCompleted(data) {
       // * if user was signed in, product was added to bag upon creation--push to review-order
       console.log(JSON.stringify(data));
-      if (session && data.createProduct.success) {
-        router.push('/shop/review-order');
-      }
 
-      // * if user not signed in, save product id to localStorage and push to signin, add product to bag upon successful signin, then push to review-order
-      if (!session) {
-        localStorage.setItem(
-          'redirectUrl',
-          'https://gibbs-photography.com/shop/review-order'
-        );
-        if (data.createProduct.newProduct) {
-          localStorage.setItem('bagProduct', data.createProduct.newProduct.id);
+      if (data.createProduct.success) {
+        if (session) {
+          console.log(`add to shopping bag`);
+          router.push('/shop/review-order');
+        } else {
+          if (data.createProduct.newProduct) {
+            localStorage.setItem(
+              'redirectUrl',
+              'https://gibbs-photography.com/shop/review-order'
+            );
+            localStorage.setItem(
+              'bagProduct',
+              data.createProduct.newProduct.id
+            );
+            router.push('/auth/signin');
+          }
         }
-
-        router.push('/auth/signin');
+      } else {
+        console.log(`raise toast to failure`);
       }
     },
   });
