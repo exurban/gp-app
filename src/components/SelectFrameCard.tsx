@@ -15,9 +15,7 @@ const SelectFrameCard: React.FC<Props> = ({
   return (
     <div
       className={`m-3 shadow-sm rounded-md border-2 border-solid dark:hover:border-purple-500 transition-colors ease-in select-none  ${
-        isSelected
-          ? 'border-purple-500'
-          : 'border-blueGray-700 dark:border-blueGray-500'
+        isSelected ? 'border-purple-500 text-white' : 'border-blueGray-600'
       }`}
       onClick={() => setSelectedFrame(frame)}
     >
@@ -31,7 +29,7 @@ const SelectFrameCard: React.FC<Props> = ({
       <div
         className={`py-2 transition-colors ease-in select-none ${
           isSelected
-            ? 'border-purple-500 dark:bg-purple-800'
+            ? 'border-purple-500 bg-purple-700'
             : 'border-blueGray-700 dark:border-blueGray-500'
         }`}
       >

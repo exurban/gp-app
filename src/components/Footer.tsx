@@ -1,4 +1,17 @@
+import { useState } from 'react';
+import NewsletterSignup from './NewsletterSignup';
+
 const Footer: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
   return (
     <>
       <footer
@@ -29,12 +42,7 @@ const Footer: React.FC = () => {
             </div>
 
             <div className="px-5 py-2">
-              <a
-                href="/newsletter"
-                className="text-sm lg:text-base text-coolGray-600 hover:text-indigo-600 dark:text-coolGray-500 dark:hover:text-white"
-              >
-                Newsletter
-              </a>
+              <NewsletterSignup />
             </div>
 
             <div className="px-5 py-2">

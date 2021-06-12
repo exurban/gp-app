@@ -19,11 +19,10 @@ const ReviewOrderPage: React.FC = () => {
 
   const { loading, error, data } = useQuery(ShoppingBagItemsDocument);
 
-  if (error) return <ErrorMessage message="Error loading photos." />;
+  if (error)
+    return <ErrorMessage message="Error loading shopping bag items." />;
 
-  if (loading) return <Loader />;
-
-  if (isLoading) return <Loader />;
+  if (loading || isLoading) return <Loader />;
 
   if (!data) return null;
 

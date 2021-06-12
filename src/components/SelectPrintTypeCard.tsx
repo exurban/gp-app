@@ -25,8 +25,8 @@ const SelectPrintTypeCard: React.FC<Props> = ({
     <div
       className={`my-3 p-4 shadow-sm rounded-md border-2 border-solid dark:hover:border-purple-500 transition-colors ease-in select-none  ${
         isSelected
-          ? 'border-purple-500 dark:bg-purple-800'
-          : 'border-blueGray-700 dark:border-blueGray-500'
+          ? 'border-purple-500 bg-purple-700 text-white'
+          : 'border-blueGray-600'
       }`}
       onClick={() => select(type)}
     >

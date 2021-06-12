@@ -56,7 +56,7 @@ const BagItem: React.FC<Props> = ({ product }) => {
             quality={80}
           />
         </div>
-        <h5 className="col-start-4 col-span-6">
+        <h5 className="col-start-4 col-span-6 text-2xl font-semibold">
           {photo.title}, {displayDimensions}
         </h5>
         {/* <p className="mt-2">{photo.description}</p> */}
