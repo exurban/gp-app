@@ -1,17 +1,6 @@
-import { useState } from 'react';
 import NewsletterSignup from './NewsletterSignup';
 
 const Footer: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  function closeModal() {
-    setIsOpen(false);
-  }
-
-  function openModal() {
-    setIsOpen(true);
-  }
-
   return (
     <>
       <footer
