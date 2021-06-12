@@ -17,7 +17,7 @@ const NewsletterSignup: React.FC = () => {
       <div>
         <button
           type="button"
-          onClick={openModal}
+          onClick={isOpen ? closeModal : openModal}
           className="text-sm lg:text-base text-coolGray-600 hover:text-indigo-600 dark:text-coolGray-500 dark:hover:text-white focus:outline-none"
         >
           Newsletter
@@ -123,22 +123,3 @@ const NewsletterSignup: React.FC = () => {
 };
 
 export default NewsletterSignup;
-
-{
-  /* <Dialog.Title
-  as="h3"
-  className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl"
->
-  Signup for Our Newsletter
-</Dialog.Title>; */
-}
-
-// <p className="mt-2">
-//   Sometimes we have thoughts. Occasionally we write them down. We seldom share them.
-// </p>
-
-// <p className="mt-2">
-//   If you'd like to receive our highly-curated thoughts
-//   directly in your inbox (3-4 times per year?), please
-//   sign up here.
-// </p>
