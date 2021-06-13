@@ -67,7 +67,9 @@ const ConfigureForPurchasePage: React.FC = () => {
           const pid = data.createProduct.newProduct.id;
           console.log(`signed in--${pid} is ${typeof pid}`);
           const pidInt = parseInt(pid);
+          console.log(`signed in--${pidInt} is ${typeof pidInt}`);
           addToBag(pidInt);
+          console.log(`got past add to bag.`);
           router.push('/shop/review-order');
         } else {
           if (data.createProduct.newProduct) {
