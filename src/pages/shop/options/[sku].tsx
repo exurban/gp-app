@@ -64,8 +64,10 @@ const ConfigureForPurchasePage: React.FC = () => {
 
       if (data.createProduct.success) {
         if (session && data.createProduct.newProduct) {
-          console.log(`add to shopping bag`);
-          addToBag(parseInt(data.createProduct.newProduct.id));
+          const pid = data.createProduct.newProduct.id;
+          console.log(`signed in--${pid} is ${typeof pid}`);
+          const pidInt = parseInt(pid);
+          addToBag(pidInt);
           router.push('/shop/review-order');
         } else {
           if (data.createProduct.newProduct) {
