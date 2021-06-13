@@ -12,7 +12,6 @@ import {
   CreateProductMutationVariables,
   ShoppingBagItemsDocument,
   AddProductToShoppingBagDocument,
-  AddProductToShoppingBagMutationVariables,
 } from '../../../graphql-operations';
 import Loader from '../../../components/Loader';
 import ErrorMessage from '../../../components/ErrorMessage';
@@ -65,11 +64,9 @@ const ConfigureForPurchasePage: React.FC = () => {
       if (data.createProduct.success) {
         if (session && data.createProduct.newProduct) {
           const pid = data.createProduct.newProduct.id;
-          console.log(`signed in--${pid} is ${typeof pid}`);
-          const pidInt = parseInt(pid);
-          console.log(`signed in--${pidInt} is ${typeof pidInt}`);
-          addToBag(pidInt);
-          console.log(`got past add to bag.`);
+          addToShoppingBag({
+            variables: { productId: parseInt(pid) },
+          });
           router.push('/shop/review-order');
         } else {
           if (data.createProduct.newProduct) {
@@ -225,18 +222,6 @@ const ConfigureForPurchasePage: React.FC = () => {
 
     createProduct({
       variables: createVariables,
-    });
-  };
-
-  const addToBag = (pid: number) => {
-    console.log(`adding product with id ${pid} to bag.`);
-
-    const addToBagInput: AddProductToShoppingBagMutationVariables = {
-      productId: pid,
-    };
-
-    addToShoppingBag({
-      variables: addToBagInput,
     });
   };
 
