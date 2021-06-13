@@ -19,6 +19,7 @@ const SigninSuccess: React.FC = () => {
       },
     ],
   });
+
   const [addToShoppingBag] = useMutation(AddProductToShoppingBagDocument, {
     refetchQueries: [
       {
