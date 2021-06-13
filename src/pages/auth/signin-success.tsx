@@ -11,8 +11,22 @@ import {
 const SigninSuccess: React.FC = () => {
   const session = useSession();
   const router = useRouter();
-  const [addToFavorites] = useMutation(AddPhotoToFavoritesDocument);
-  const [addToShoppingBag] = useMutation(AddProductToShoppingBagDocument);
+  const [addToFavorites] = useMutation(AddPhotoToFavoritesDocument, {
+    refetchQueries: [
+      {
+        query: FavoritesDocument,
+        variables: {},
+      },
+    ],
+  });
+  const [addToShoppingBag] = useMutation(AddProductToShoppingBagDocument, {
+    refetchQueries: [
+      {
+        query: ShoppingBagItemsDocument,
+        variables: {},
+      },
+    ],
+  });
 
   if (typeof window !== 'undefined' && session) {
     const newFav = localStorage.getItem('favPhoto');
