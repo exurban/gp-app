@@ -11,6 +11,8 @@ import {
   CreateProductDocument,
   CreateProductMutationVariables,
   ShoppingBagItemsDocument,
+  AddProductToShoppingBagDocument,
+  AddProductToShoppingBagMutationVariables,
 } from '../../../graphql-operations';
 import Loader from '../../../components/Loader';
 import ErrorMessage from '../../../components/ErrorMessage';
@@ -37,6 +39,18 @@ const ConfigureForPurchasePage: React.FC = () => {
   const [selectedFrame, setSelectedFrame] =
     useState<FrameInfoFragment | undefined>(undefined);
 
+  const [addToShoppingBag] = useMutation(AddProductToShoppingBagDocument, {
+    refetchQueries: [
+      {
+        query: ShoppingBagItemsDocument,
+        variables: {},
+      },
+    ],
+    onCompleted() {
+      router.push(`/shop/review-order`);
+    },
+  });
+
   const [createProduct] = useMutation(CreateProductDocument, {
     refetchQueries: [
       {
@@ -49,8 +63,9 @@ const ConfigureForPurchasePage: React.FC = () => {
       console.log(JSON.stringify(data));
 
       if (data.createProduct.success) {
-        if (session) {
+        if (session && data.createProduct.newProduct) {
           console.log(`add to shopping bag`);
+          addToBag(parseInt(data.createProduct.newProduct.id));
           router.push('/shop/review-order');
         } else {
           if (data.createProduct.newProduct) {
@@ -206,6 +221,18 @@ const ConfigureForPurchasePage: React.FC = () => {
 
     createProduct({
       variables: createVariables,
+    });
+  };
+
+  const addToBag = (pid: number) => {
+    console.log(`adding product with id ${pid} to bag.`);
+
+    const addToBagInput: AddProductToShoppingBagMutationVariables = {
+      productId: pid,
+    };
+
+    addToShoppingBag({
+      variables: addToBagInput,
     });
   };
 
