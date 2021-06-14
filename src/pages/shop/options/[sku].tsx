@@ -42,9 +42,9 @@ const ConfigureForPurchasePage: React.FC = () => {
     refetchQueries: [
       {
         query: ShoppingBagItemsDocument,
-        variables: {},
       },
     ],
+    awaitRefetchQueries: false,
     onCompleted() {
       router.push(`/shop/review-order`);
     },
@@ -54,9 +54,9 @@ const ConfigureForPurchasePage: React.FC = () => {
     refetchQueries: [
       {
         query: ShoppingBagItemsDocument,
-        variables: {},
       },
     ],
+    awaitRefetchQueries: false,
     onCompleted(data) {
       // * if user was signed in, product was added to bag upon creation--push to review-order
       console.log(JSON.stringify(data));
@@ -318,7 +318,7 @@ const ConfigureForPurchasePage: React.FC = () => {
           )}
 
           <button
-            className="bg-indigo-700 text-white rounded py-2 px-5 my-10 ml-auto mr-0 disabled:opacity-50"
+            className="bg-indigo-700 text-white rounded py-2 xl:py-3 px-4 xl:px-6 my-10 ml-auto mr-0 disabled:opacity-50"
             disabled={selectedPrint === undefined}
             onClick={() => buildProduct()}
           >

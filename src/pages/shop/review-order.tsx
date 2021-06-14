@@ -126,7 +126,7 @@ const ReviewOrderPage: React.FC = () => {
       </div>
 
       <button
-        className="bg-indigo-700 text-white rounded py-4 px-8 my-10 ml-auto mr-0 text-xl disabled:opacity-50"
+        className="bg-indigo-700 text-white rounded py-2 xl:py-3 px-4 xl:px-6 my-10 ml-auto mr-0 text-xl disabled:opacity-50"
         onClick={checkout}
       >
         Checkout
