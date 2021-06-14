@@ -44,7 +44,7 @@ const ConfigureForPurchasePage: React.FC = () => {
         query: ShoppingBagItemsDocument,
       },
     ],
-    awaitRefetchQueries: false,
+    awaitRefetchQueries: true,
     onCompleted() {
       router.push(`/shop/review-order`);
     },
@@ -56,7 +56,7 @@ const ConfigureForPurchasePage: React.FC = () => {
         query: ShoppingBagItemsDocument,
       },
     ],
-    awaitRefetchQueries: false,
+    awaitRefetchQueries: true,
     onCompleted(data) {
       // * if user was signed in, product was added to bag upon creation--push to review-order
       console.log(JSON.stringify(data));
