@@ -15,7 +15,6 @@ const SigninSuccess: React.FC = () => {
     refetchQueries: [
       {
         query: FavoritesDocument,
-        variables: {},
       },
     ],
   });
@@ -24,7 +23,6 @@ const SigninSuccess: React.FC = () => {
     refetchQueries: [
       {
         query: ShoppingBagItemsDocument,
-        variables: {},
       },
     ],
   });

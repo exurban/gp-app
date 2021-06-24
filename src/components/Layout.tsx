@@ -22,7 +22,7 @@ const Layout: React.FC = (props) => {
     title: 'Gibbs Photography',
     description: `Landscape & Wildlife Photography`,
     type: `website`,
-    image: `https://configcdkstack-gpbucketc7c11d3d-qtgzc43jqi2c.s3.us-east-2.amazonaws.com/1180_share-image-1617560952028.jpeg`,
+    image: `https://res.cloudinary.com/gibbs-photography/image/upload/v1621101387/share_images/share_image-1036_ddoizm.jpg`,
     ...customMeta,
   };
 
