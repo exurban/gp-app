@@ -63,6 +63,7 @@ const ConfigureForPurchasePage: React.FC = () => {
             refetchQueries: [
               {
                 query: ShoppingBagItemsDocument,
+                variables: {},
               },
             ],
           });
