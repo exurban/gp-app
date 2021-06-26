@@ -39,11 +39,6 @@ const ConfigureForPurchasePage: React.FC = () => {
     useState<FrameInfoFragment | undefined>(undefined);
 
   const [addToShoppingBag] = useMutation(AddProductToShoppingBagDocument, {
-    refetchQueries: [
-      {
-        query: ShoppingBagItemsDocument,
-      },
-    ],
     onCompleted() {
       router.push(`/shop/review-order`);
     },
@@ -65,6 +60,11 @@ const ConfigureForPurchasePage: React.FC = () => {
           console.log(`adding product with id ${pid} to shopping bag.`);
           addToShoppingBag({
             variables: { productId: parseInt(pid) },
+            refetchQueries: [
+              {
+                query: ShoppingBagItemsDocument,
+              },
+            ],
           });
           router.push('/shop/review-order');
         } else {
