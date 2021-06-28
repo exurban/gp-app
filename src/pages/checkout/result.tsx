@@ -17,6 +17,8 @@ const CheckoutResultPage: NextPage = () => {
 
   if (error) return <div>failed to load</div>;
 
+  console.log(JSON.stringify(data, null, 2));
+
   const name = data?.payment_intent.charges.data[0].billing_details.name;
   const paymentAmount =
     data?.payment_intent.charges.data[0].amount_captured / 100;

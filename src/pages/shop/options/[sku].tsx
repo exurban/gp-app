@@ -57,7 +57,9 @@ const ConfigureForPurchasePage: React.FC = () => {
       if (data.createProduct.success) {
         if (session && data.createProduct.newProduct) {
           const pid = data.createProduct.newProduct.id;
-          console.log(`adding product with id ${pid} to shopping bag.`);
+          console.log(
+            `adding product with id ${pid} (${typeof pid}) to shopping bag.`
+          );
           addToShoppingBag({
             variables: { productId: parseInt(pid) },
             refetchQueries: [
