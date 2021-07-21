@@ -1,11 +1,13 @@
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/client';
 
 import { fetchGetJSON } from '../../utils/api-helpers';
 import useSWR from 'swr';
 
 const CheckoutResultPage: NextPage = () => {
   const router = useRouter();
+  const [session] = useSession();
 
   // fetch Checkout Session from static page via static generation
   const { data, error } = useSWR(
@@ -17,7 +19,18 @@ const CheckoutResultPage: NextPage = () => {
 
   if (error) return <div>failed to load</div>;
 
-  console.log(JSON.stringify(data, null, 2));
+  // const amountPaid = data?.payment_intent.amount_received;
+  console.log(data.shipping.address);
+  console.log(data.receipt_email);
+  console.log(data.payment_status);
+
+  // * if no session, log error and return null
+  if (!session) {
+    console.error(`No session?!?!`);
+    return null;
+  }
+
+  // * If retailPrice of shoppingBagItems === amountPaid, remove all shopping bag items
 
   const name = data?.payment_intent.charges.data[0].billing_details.name;
   const paymentAmount =
