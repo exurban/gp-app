@@ -19,16 +19,15 @@ const CheckoutResultPage: NextPage = () => {
 
   if (error) return <div>failed to load</div>;
 
+  // * if no session, log error and return null
+  if (!session || !data) {
+    return <p>Loading...</p>;
+  }
+
   // const amountPaid = data?.payment_intent.amount_received;
   console.log(`Shipping address: ${data?.shipping.address}`);
   console.log(`Receipt email: ${data?.receipt_email}`);
   console.log(`Payment status: ${data?.payment_status}`);
-
-  // * if no session, log error and return null
-  if (!session) {
-    console.error(`No session?!?!`);
-    return null;
-  }
 
   // * If retailPrice of shoppingBagItems === amountPaid, remove all shopping bag items
 
