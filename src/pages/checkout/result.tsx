@@ -20,9 +20,9 @@ const CheckoutResultPage: NextPage = () => {
   if (error) return <div>failed to load</div>;
 
   // const amountPaid = data?.payment_intent.amount_received;
-  console.log(data.shipping.address);
-  console.log(data.receipt_email);
-  console.log(data.payment_status);
+  console.log(`Shipping address: ${data.shipping.address}`);
+  console.log(`Receipt email: ${data.receipt_email}`);
+  console.log(`Payment status: ${data.payment_status}`);
 
   // * if no session, log error and return null
   if (!session) {
