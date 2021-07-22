@@ -101,6 +101,28 @@ export type AddMatResponse = {
   newMat?: Maybe<Mat>;
 };
 
+export type AddOrderInput = {
+  /** The user who placed the order. */
+  userId?: Maybe<Scalars['Int']>;
+  /** Current status of the order. */
+  orderStatus?: Maybe<OrderStatus>;
+  line1?: Maybe<Scalars['String']>;
+  line2?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  state?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  postalCode?: Maybe<Scalars['String']>;
+  /** IDs of products on the order. */
+  productIds?: Maybe<Array<Scalars['Int']>>;
+};
+
+export type AddOrderResponse = {
+  __typename?: 'AddOrderResponse';
+  success: Scalars['Boolean'];
+  message: Scalars['String'];
+  newOrder?: Maybe<Order>;
+};
+
 export type AddPhotoImageInput = {
   imageName?: Maybe<Scalars['String']>;
   fileExtension?: Maybe<Scalars['String']>;
@@ -289,7 +311,6 @@ export type Address = {
   state: Scalars['String'];
   country: Scalars['String'];
   postalCode: Scalars['String'];
-  orders: Array<Order>;
   createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
 };
@@ -534,6 +555,8 @@ export type Mutation = {
   addMat: AddMatResponse;
   updateMat: UpdateMatResponse;
   deleteMat: Scalars['Boolean'];
+  addOrder: AddOrderResponse;
+  updateOrder: UpdateOrderResponse;
   updatePhotoImagesFromCsv: UpdatePhotoImagesFromCsvResponse;
   addPhotoImage: AddShareImageResponse;
   updatePhotoImage: UpdatePhotoImageResponse;
@@ -626,6 +649,15 @@ export type MutationUpdateMatArgs = {
 };
 
 export type MutationDeleteMatArgs = {
+  id: Scalars['Int'];
+};
+
+export type MutationAddOrderArgs = {
+  input: AddOrderInput;
+};
+
+export type MutationUpdateOrderArgs = {
+  input: UpdateOrderInput;
   id: Scalars['Int'];
 };
 
@@ -775,20 +807,32 @@ export type MutationRemoveProductFromShoppingBagArgs = {
 export type Order = {
   __typename?: 'Order';
   id: Scalars['ID'];
+  user?: Maybe<User>;
   orderStatus: OrderStatus;
-  products: Array<Product>;
-  shipToAddress: Address;
-  user: User;
+  products?: Maybe<Array<Product>>;
+  line1?: Maybe<Scalars['String']>;
+  line2?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  state?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  postalCode?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
 };
 
 /** Order status */
 export enum OrderStatus {
+  /** order freshly created. */
+  Created = 'CREATED',
+  /** payment received from customer */
   Paid = 'PAID',
+  /** order placed with lab */
   Placed = 'PLACED',
+  /** lab shipped order */
   Shipped = 'SHIPPED',
+  /** order complete */
   Fulfilled = 'FULFILLED',
+  /** problem with order, see notes */
   Problem = 'PROBLEM',
 }
 
@@ -972,6 +1016,8 @@ export type Product = {
   shoppingBag?: Maybe<User>;
   order: Order;
   totalRetailPrice: Scalars['Float'];
+  removedAt?: Maybe<Scalars['DateTime']>;
+  removedBy?: Maybe<User>;
   createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
   productSummary: Scalars['String'];
@@ -1025,6 +1071,7 @@ export type Query = {
   matsWithAspectRatio: Array<Mat>;
   matsWithAspectRatioAndSize: Array<Mat>;
   mat: Mat;
+  allOrders: Array<Order>;
   photoImages: Array<PhotoImage>;
   photoImage: PhotoImage;
   searchPhotoImages: SearchShareImagesResponse;
@@ -1609,6 +1656,28 @@ export type UpdateMatsFromCsvResponse = {
   inserted?: Maybe<Scalars['Int']>;
 };
 
+export type UpdateOrderInput = {
+  /** The user who placed the order. */
+  userId?: Maybe<Scalars['Int']>;
+  /** Current status of the order. */
+  orderStatus?: Maybe<OrderStatus>;
+  line1?: Maybe<Scalars['String']>;
+  line2?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  state?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  postalCode?: Maybe<Scalars['String']>;
+  /** IDs of products on the order. */
+  productIds?: Maybe<Array<Scalars['Int']>>;
+};
+
+export type UpdateOrderResponse = {
+  __typename?: 'UpdateOrderResponse';
+  success: Scalars['Boolean'];
+  message: Scalars['String'];
+  updatedOrder?: Maybe<Order>;
+};
+
 export type UpdatePhotoImageInput = {
   imageName?: Maybe<Scalars['String']>;
   fileExtension?: Maybe<Scalars['String']>;
@@ -1865,6 +1934,8 @@ export type User = {
   userFavorites: Array<UserFavorite>;
   orders: Array<Order>;
   shoppingBagItems?: Maybe<Array<Product>>;
+  /** Products added to bag and then removed by user. */
+  removedProducts?: Maybe<Array<Product>>;
   createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
 };
@@ -2091,6 +2162,76 @@ export type MatInfoFragment = { __typename?: 'Mat' } & Pick<
       >
     >;
   };
+
+export type AddOrderMutationVariables = Exact<{
+  input: AddOrderInput;
+}>;
+
+export type AddOrderMutation = { __typename?: 'Mutation' } & {
+  addOrder: { __typename?: 'AddOrderResponse' } & Pick<
+    AddOrderResponse,
+    'success' | 'message'
+  > & {
+      newOrder?: Maybe<
+        { __typename: 'Order' } & Pick<
+          Order,
+          | 'id'
+          | 'orderStatus'
+          | 'line1'
+          | 'line2'
+          | 'city'
+          | 'state'
+          | 'country'
+          | 'postalCode'
+          | 'createdAt'
+          | 'updatedAt'
+        > & {
+            user?: Maybe<{ __typename?: 'User' } & Pick<User, 'id'>>;
+            products?: Maybe<
+              Array<{ __typename?: 'Product' } & Pick<Product, 'id'>>
+            >;
+          }
+      >;
+    };
+};
+
+export type UpdateOrderMutationVariables = Exact<{
+  id: Scalars['Int'];
+  input: UpdateOrderInput;
+}>;
+
+export type UpdateOrderMutation = { __typename?: 'Mutation' } & {
+  updateOrder: { __typename?: 'UpdateOrderResponse' } & Pick<
+    UpdateOrderResponse,
+    'success' | 'message'
+  > & {
+      updatedOrder?: Maybe<
+        { __typename?: 'Order' } & Pick<
+          Order,
+          | 'id'
+          | 'orderStatus'
+          | 'line1'
+          | 'line2'
+          | 'city'
+          | 'state'
+          | 'country'
+          | 'postalCode'
+        > & {
+            user?: Maybe<{ __typename?: 'User' } & Pick<User, 'id'>>;
+            products?: Maybe<
+              Array<
+                { __typename?: 'Product' } & Pick<Product, 'id'> & {
+                    photo: { __typename?: 'Photo' } & PhotoInfoFragment;
+                    print: { __typename?: 'Print' } & PrintInfoFragment;
+                    mat?: Maybe<{ __typename?: 'Mat' } & MatInfoFragment>;
+                    frame?: Maybe<{ __typename?: 'Frame' } & FrameInfoFragment>;
+                  }
+              >
+            >;
+          }
+      >;
+    };
+};
 
 export type PhotoImageInfoFragment = { __typename?: 'PhotoImage' } & Pick<
   PhotoImage,
@@ -3583,6 +3724,304 @@ export const AllPhotosAtLocationDocument: DocumentNode<
       },
     },
     ...PhotoInfoFragmentDoc.definitions,
+  ],
+};
+export const AddOrderDocument: DocumentNode<
+  AddOrderMutation,
+  AddOrderMutationVariables
+> = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'addOrder' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'AddOrderInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'addOrder' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'success' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'message' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'newOrder' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: '__typename' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'user' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'orderStatus' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'products' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'line1' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'line2' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'city' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'state' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'country' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'postalCode' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdAt' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'updatedAt' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+};
+export const UpdateOrderDocument: DocumentNode<
+  UpdateOrderMutation,
+  UpdateOrderMutationVariables
+> = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'updateOrder' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'UpdateOrderInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateOrder' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'success' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'message' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'updatedOrder' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'user' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'orderStatus' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'line1' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'line2' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'city' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'state' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'country' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'postalCode' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'products' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'photo' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'FragmentSpread',
+                                    name: { kind: 'Name', value: 'PhotoInfo' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'print' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'FragmentSpread',
+                                    name: { kind: 'Name', value: 'PrintInfo' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'mat' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'FragmentSpread',
+                                    name: { kind: 'Name', value: 'MatInfo' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'frame' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'FragmentSpread',
+                                    name: { kind: 'Name', value: 'FrameInfo' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...PhotoInfoFragmentDoc.definitions,
+    ...PrintInfoFragmentDoc.definitions,
+    ...MatInfoFragmentDoc.definitions,
+    ...FrameInfoFragmentDoc.definitions,
   ],
 };
 export const AllPhotosByPhotographerDocument: DocumentNode<

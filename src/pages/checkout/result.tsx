@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/client';
@@ -5,9 +6,35 @@ import { useSession } from 'next-auth/client';
 import { fetchGetJSON } from '../../utils/api-helpers';
 import useSWR from 'swr';
 
+import { useMutation } from '@apollo/client';
+import {
+  AddOrderDocument,
+  AddOrderMutationVariables,
+} from '../../graphql-operations';
+
 const CheckoutResultPage: NextPage = () => {
   const router = useRouter();
   const [session] = useSession();
+  // const [line1, setLine1] = useState<string | undefined>(undefined);
+  // const [line2, setLine2] = useState<string | undefined>(undefined);
+  // const [city, setCity] = useState<string | undefined>(undefined);
+  // const [state, setState] = useState<string | undefined>(undefined);
+  // const [country, setCountry] = useState<string | undefined>(undefined);
+  // const [postalCode, setPostalCode] = useState<string | undefined>(undefined);
+
+  const [addOrder] = useMutation(AddOrderDocument);
+
+  // const input = {
+  //   line1: line1,
+  //   line2: line2,
+  //   city: city,
+  //   state: state,
+  //   country: country,
+  //   postalCode: postalCode,
+  //   productIds: [16, 17],
+  // };
+
+  // const orderVariables: AddOrderMutationVariables = { input };
 
   // fetch Checkout Session from static page via static generation
   const { data, error } = useSWR(
@@ -28,6 +55,33 @@ const CheckoutResultPage: NextPage = () => {
   console.log(`Shipping address: ${data?.shipping.address}`);
   console.log(`Receipt email: ${data?.receipt_email}`);
   console.log(`Payment status: ${data?.payment_status}`);
+
+  useEffect(() => {
+    if (
+      data.payment_status &&
+      data.payment_status === 'paid' &&
+      data.shipping.address
+    ) {
+      const add = data.shipping.address;
+      const input = {
+        line1: add.line1 as string,
+        line2: add.line2 as string,
+        city: add.city as string,
+        state: add.state as string,
+        country: add.country as string,
+        postalCode: add.postalCode as string,
+        productIds: [16, 17],
+      };
+      const orderVariables: AddOrderMutationVariables = { input };
+
+      addOrder({ variables: orderVariables });
+      // setLine1(add.line1);
+      // setLine2(add.line2);
+      // setCity(add.city);
+      // setCountry(add.country);
+      // setPostalCode(add.postalCode);
+    }
+  });
 
   // * If retailPrice of shoppingBagItems === amountPaid, remove all shopping bag items
 
