@@ -81,7 +81,7 @@ const CheckoutResultPage: NextPage = () => {
       // setCountry(add.country);
       // setPostalCode(add.postalCode);
     }
-  });
+  }, [data, data.payment_status, data.shipping.address]);
 
   // * If retailPrice of shoppingBagItems === amountPaid, remove all shopping bag items
 
