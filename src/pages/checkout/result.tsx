@@ -86,17 +86,17 @@ const CheckoutResultPage: NextPage = () => {
 
   // * If retailPrice of shoppingBagItems === amountPaid, remove all shopping bag items
 
-  const name = data?.payment_intent.charges.data[0].billing_details.name;
-  const paymentAmount =
-    data?.payment_intent.charges.data[0].amount_captured / 100;
-  const email = data?.payment_intent.charges.data[0].billing_details.email;
-
   if (error) return <div>failed to load</div>;
 
   // * if no session, log error and return null
   if (!session || !data) {
     return <p>Loading...</p>;
   }
+
+  const name = data?.payment_intent.charges.data[0].billing_details.name;
+  const paymentAmount =
+    data?.payment_intent.charges.data[0].amount_captured / 100;
+  const email = data?.payment_intent.charges.data[0].billing_details.email;
 
   return (
     <div className="container w-5/6 max-w-3xl mx-auto text-blueGray-800 dark:text-white">
