@@ -81,7 +81,7 @@ const CheckoutResultPage: NextPage = () => {
           2
         )}`
       );
-      // addOrder({ variables: orderVariables });
+      addOrder({ variables: orderVariables });
 
       // setLine1(add.line1);
       // setLine2(add.line2);
