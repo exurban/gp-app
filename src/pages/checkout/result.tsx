@@ -44,13 +44,6 @@ const CheckoutResultPage: NextPage = () => {
     fetchGetJSON
   );
 
-  if (error) return <div>failed to load</div>;
-
-  // * if no session, log error and return null
-  if (!session || !data) {
-    return <p>Loading...</p>;
-  }
-
   // const amountPaid = data?.payment_intent.amount_received;
   console.log(`Shipping address: ${data?.shipping.address}`);
   console.log(`Receipt email: ${data?.receipt_email}`);
@@ -97,6 +90,13 @@ const CheckoutResultPage: NextPage = () => {
   const paymentAmount =
     data?.payment_intent.charges.data[0].amount_captured / 100;
   const email = data?.payment_intent.charges.data[0].billing_details.email;
+
+  if (error) return <div>failed to load</div>;
+
+  // * if no session, log error and return null
+  if (!session || !data) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div className="container w-5/6 max-w-3xl mx-auto text-blueGray-800 dark:text-white">
