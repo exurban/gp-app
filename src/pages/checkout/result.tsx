@@ -74,7 +74,15 @@ const CheckoutResultPage: NextPage = () => {
       };
       const orderVariables: AddOrderMutationVariables = { input };
 
-      addOrder({ variables: orderVariables });
+      console.log(
+        `should send addOrder mutation here with: ${JSON.stringify(
+          orderVariables,
+          null,
+          2
+        )}`
+      );
+      // addOrder({ variables: orderVariables });
+
       // setLine1(add.line1);
       // setLine2(add.line2);
       // setCity(add.city);
