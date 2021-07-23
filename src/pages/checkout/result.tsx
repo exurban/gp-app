@@ -51,11 +51,11 @@ const CheckoutResultPage: NextPage = () => {
 
   useEffect(() => {
     if (
-      data.payment_status &&
-      data.payment_status === 'paid' &&
-      data.shipping.address
+      data?.payment_status &&
+      data?.payment_status === 'paid' &&
+      data?.shipping.address
     ) {
-      const add = data.shipping.address;
+      const add = data?.shipping.address;
       const input = {
         line1: add.line1 as string,
         line2: add.line2 as string,
