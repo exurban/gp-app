@@ -20,7 +20,7 @@ module.exports = {
       gray: colors.gray,
       trueGray: colors.trueGray,
       warmGray: colors.warmGray,
-      lightBlue: colors.lightBlue,
+      lightBlue: colors.sky,
       blue: colors.blue,
       indigo: colors.indigo,
       purple: colors.purple,

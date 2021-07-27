@@ -6,8 +6,9 @@ import { useSession } from 'next-auth/client';
 import { fetchGetJSON } from '../../utils/api-helpers';
 import useSWR from 'swr';
 
-import { useMutation } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import {
+  ShoppingBagItemsDocument,
   AddOrderDocument,
   AddOrderMutationVariables,
 } from '../../graphql-operations';
@@ -15,26 +16,16 @@ import {
 const CheckoutResultPage: NextPage = () => {
   const router = useRouter();
   const [session] = useSession();
-  // const [line1, setLine1] = useState<string | undefined>(undefined);
-  // const [line2, setLine2] = useState<string | undefined>(undefined);
-  // const [city, setCity] = useState<string | undefined>(undefined);
-  // const [state, setState] = useState<string | undefined>(undefined);
-  // const [country, setCountry] = useState<string | undefined>(undefined);
-  // const [postalCode, setPostalCode] = useState<string | undefined>(undefined);
 
-  const [addOrder] = useMutation(AddOrderDocument);
-
-  // const input = {
-  //   line1: line1,
-  //   line2: line2,
-  //   city: city,
-  //   state: state,
-  //   country: country,
-  //   postalCode: postalCode,
-  //   productIds: [16, 17],
-  // };
-
-  // const orderVariables: AddOrderMutationVariables = { input };
+  const [addOrder] = useMutation(AddOrderDocument, {
+    refetchQueries: [
+      {
+        query: ShoppingBagItemsDocument,
+      },
+    ],
+  });
+  const { data: bagData } = useQuery(ShoppingBagItemsDocument);
+  const bagItems = bagData?.shoppingBagItems.dataList;
 
   // fetch Checkout Session from static page via static generation
   const { data, error } = useSWR(
@@ -44,10 +35,25 @@ const CheckoutResultPage: NextPage = () => {
     fetchGetJSON
   );
 
+  // ! get user, get bag items for user, compare retail price + shipping to amountPaid, use productIds from bag items in addOrder mutation
+
+  let bagTotalPrice = 0;
+  const productIds: number[] = [];
+
+  if (bagItems) {
+    bagItems.map((bi) => (bagTotalPrice += bi.totalRetailPrice));
+    console.log(`Bag Total Price: ${JSON.stringify(bagTotalPrice, null, 2)}`);
+    bagItems.map((item) => {
+      productIds.push(parseInt(item.id));
+    });
+  } else console.log(`Failed to fetch bag items.`);
+
   // const amountPaid = data?.payment_intent.amount_received;
-  console.log(`Shipping address: ${data?.shipping.address}`);
-  console.log(`Receipt email: ${data?.receipt_email}`);
-  console.log(`Payment status: ${data?.payment_status}`);
+  if (data && data.shipping_address) {
+    console.log(`Shipping address: ${data?.shipping.address}`);
+    console.log(`Receipt email: ${data?.receipt_email}`);
+    console.log(`Payment status: ${data?.payment_status}`);
+  }
 
   useEffect(() => {
     if (
@@ -56,35 +62,22 @@ const CheckoutResultPage: NextPage = () => {
       data?.shipping.address
     ) {
       const add = data?.shipping.address;
+      console.log(`shipping_address: ${JSON.stringify(add, null, 2)}`);
+
       const input = {
         line1: add.line1 as string,
         line2: add.line2 as string,
         city: add.city as string,
         state: add.state as string,
         country: add.country as string,
-        postalCode: add.postalCode as string,
-        productIds: [16, 17],
+        postalCode: add.postal_code as string,
+        productIds: productIds,
       };
       const orderVariables: AddOrderMutationVariables = { input };
 
-      console.log(
-        `should send addOrder mutation here with: ${JSON.stringify(
-          orderVariables,
-          null,
-          2
-        )}`
-      );
       addOrder({ variables: orderVariables });
-
-      // setLine1(add.line1);
-      // setLine2(add.line2);
-      // setCity(add.city);
-      // setCountry(add.country);
-      // setPostalCode(add.postalCode);
     }
   }, [data, data?.payment_status, data?.shipping?.address]);
-
-  // * If retailPrice of shoppingBagItems === amountPaid, remove all shopping bag items
 
   if (error) return <div>failed to load</div>;
 

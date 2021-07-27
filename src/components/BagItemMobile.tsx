@@ -5,7 +5,8 @@ import {
   ShoppingBagItemsDocument,
 } from '../graphql-operations';
 import { useMutation } from '@apollo/client';
-import { toast } from 'react-toastify';
+
+// TODO: Add TOAST
 
 type Props = {
   product: ProductInfoFragment;
@@ -21,13 +22,9 @@ const BagItem: React.FC<Props> = ({ product }) => {
     ? `${print.dimension1}"w x ${print.dimension2}"h`
     : `${print.dimension2}"w x ${print.dimension1}"h`;
 
-  const toastSuccess = (msg: string) => {
-    toast.success(msg);
-  };
-
   const [deleteProduct] = useMutation(DeleteProductDocument, {
     onCompleted() {
-      toastSuccess(`Successfully removed product from your shopping bag.`);
+      console.log(`Successfully removed product from your shopping bag.`);
     },
   });
 

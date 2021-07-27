@@ -28,7 +28,7 @@ import {
   LinkedinShareButton,
   LinkedinIcon,
 } from 'react-share';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
 
 const PhotoInfo: React.FC = () => {
   const router = useRouter();
@@ -72,11 +72,13 @@ const PhotoInfo: React.FC = () => {
   const collections = photo.collectionsForPhoto?.map((x) => x.collection);
 
   const toastSuccess = (msg: string) => {
-    toast.success(msg);
+    console.log(msg);
+    // toast.success(msg);
   };
 
   const toastFail = (msg: string) => {
-    toast.warning(msg);
+    console.log(msg);
+    // toast.warning(msg);
   };
 
   const signinFirst = () => {

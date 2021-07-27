@@ -10,7 +10,7 @@ import {
   ShoppingBagItemsDocument,
 } from '../graphql-operations';
 import { Menu, Transition } from '@headlessui/react';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
 
 const DotsVertical = () => {
   return (
@@ -143,13 +143,13 @@ const SlideMenu: React.FC<Props> = ({ photo }) => {
   const [removeFromFavorites] = useMutation(RemovePhotoFromFavoritesDocument);
 
   const toastSuccess = (msg: string) => {
-    console.log(`Success toast.`);
-    toast.success(msg);
+    console.log(msg);
+    // toast.success(msg);
   };
 
   const toastFail = (msg: string) => {
-    console.log(`Warning toast.`);
-    toast.warning(msg);
+    console.log(msg);
+    // toast.warning(msg);
   };
 
   const signinFirst = () => {

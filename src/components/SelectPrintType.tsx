@@ -23,7 +23,7 @@ const SelectPrintType: React.FC<Props> = ({
     <>
       <hr className="my-5 dark:border-blueGray-600" />
       <h5 className="mt-3 text-2xl text-purple-500">Choose your finish.</h5>
-      <div className="flex flex-col w-2/3 mx-auto mt-3 justify-around">
+      <div className="flex flex-col w-full md:w-5/6 xl:2/3 mx-auto mt-3 justify-around">
         {printTypes?.map((printType) => (
           <SelectPrintTypeCard
             key={printType.type}

@@ -218,8 +218,6 @@ const ConfigureForPurchasePage: React.FC = () => {
       frameId: frameId,
     };
 
-    console.log(`create product input: ${JSON.stringify(input, null, 2)}`);
-
     const createVariables: CreateProductMutationVariables = { input };
 
     createProduct({

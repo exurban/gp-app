@@ -26,11 +26,11 @@ const SelectFrame: React.FC<Props> = ({
         </h5>
       ) : (
         <>
-          <div className="flex flex-row mt-3 align-baseline">
+          <div className="flex flex-col md:flex-row mt-3 align-baseline">
             <h5 className="text-2xl text-purple-500">Add a frame.</h5>
 
             {frames[0].printType === 'paper' ? (
-              <p className="text-purple-700 font-medium self-center ml-2">
+              <p className="text-purple-700 font-medium self-start md:self-center ml-0 md:ml-2">
                 (+${frames[0]?.retailPrice}, optional, price includes acrylic
                 sheet to protect image)
               </p>
@@ -40,7 +40,7 @@ const SelectFrame: React.FC<Props> = ({
               </p>
             )}
           </div>
-          <div className="grid grid-cols-3 gap-x-2 gap-y-8 justify-items-center items-center justify-evenly mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-2 justify-items-center items-center justify-evenly mt-4">
             {frames.map((frame) => (
               <SelectFrameCard
                 key={frame.displayName}

@@ -23,7 +23,7 @@ const SelectMat: React.FC<Props> = ({ mats, selectedMat, setSelectedMat }) => {
           (+${mats[0]?.retailPrice}, optional)
         </p>
       </div>
-      <div className="grid grid-cols-3 gap-x-2 justify-items-center items-center justify-evenly">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-2 justify-items-center items-center justify-evenly">
         {mats?.map((mat) => (
           <SelectMatCard
             key={mat.displayName}
