@@ -9,7 +9,6 @@ import Layout from '../components/Layout';
 import CarouselLayout from '../components/CarouselLayout';
 import { useRouter } from 'next/router';
 import * as gtag from '../utils/gtag';
-import NotificationContainer from '../components/NotificationContainer';
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   const apolloClient = useApollo(pageProps);
@@ -39,7 +38,6 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
                 <Component {...pageProps} />
               </Layout>
             )}
-            <NotificationContainer />
           </ThemeProvider>
         </AuthProvider>
       </ApolloProvider>
