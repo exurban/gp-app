@@ -1,5 +1,4 @@
 import { Dispatch, SetStateAction } from 'react';
-import { useMediaQuery } from 'react-responsive';
 
 type Props = {
   type: string;
@@ -23,7 +22,6 @@ const SelectPrintTypeCard: React.FC<Props> = ({
     setSelectedPrintType(printType);
   };
 
-  const largeScreen = useMediaQuery({ query: '(min-width:1024)' });
   return (
     <div
       className={`my-3 p-4 shadow-sm rounded-md border-2 border-solid dark:hover:border-purple-500 transition-colors ease-in select-none  ${
@@ -44,13 +42,6 @@ const SelectPrintTypeCard: React.FC<Props> = ({
           from ${lowestPrice}
         </p>
       </div>
-
-      {/* <p className="text-sm self-end col-start-2 col-span-1 row-start-1 row-span-1 mt-2 ml-auto mr-0">
-            from ${lowestPrice}
-          </p>
-          <p className="col-start-1 col-span-2 row-start-2 row-span-1 self-center mt-3">
-            {description}
-          </p> */}
     </div>
   );
 };
